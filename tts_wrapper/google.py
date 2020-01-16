@@ -5,7 +5,11 @@ from .tts import TTS
 
 
 class GoogleTTS(TTS):
-    def __init__(self, creds: str, voice_name=None, lang=None) -> None:
+    def __init__(self, creds: str = None, voice_name=None, lang=None) -> None:
+        '''
+        @param creds: The path to the json file that contains the credentials. 
+        If None, assumes that the environment variable is set.
+        '''
         super().__init__(voice_name=voice_name or 'en-US-Wavenet-C', lang=lang)
         google_creds = service_account.Credentials.from_service_account_file(
             creds) if creds else None

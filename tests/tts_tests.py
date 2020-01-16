@@ -1,6 +1,6 @@
 import os
 from contextlib import contextmanager
-from tts_wrapper.tts import TTS, BackendEnum, AwsCredentials
+from tts_wrapper import PollyTTS, AwsCredentials
 
 TEST_DIR = '/tmp/tts-wrapper'
 TEST_FILE = os.path.join(TEST_DIR, 'file.wav')
@@ -14,8 +14,8 @@ def load_test_aws_creds():
 
 
 @contextmanager
-def managed_tts(*args, **kwargs):
-    tts = TTS(*args, **kwargs)
+def managed_tts(cls, *args, **kwargs):
+    tts = cls(*args, **kwargs)
     assert not os.path.exists(TEST_FILE)
     try:
         yield tts
@@ -29,13 +29,13 @@ def setup_module():
 
 
 def test_polly_with_defaults():
-    with managed_tts(BackendEnum.POLLY) as tts:
+    with managed_tts(PollyTTS) as tts:
         tts.synth('hello world', TEST_FILE)
         assert os.path.exists(TEST_FILE)
 
 
 def test_polly_with_creds():
     creds = load_test_aws_creds()
-    with managed_tts(BackendEnum.POLLY, creds=creds) as tts:
+    with managed_tts(PollyTTS, creds=creds) as tts:
         tts.synth('hello world', TEST_FILE)
         assert os.path.exists(TEST_FILE)

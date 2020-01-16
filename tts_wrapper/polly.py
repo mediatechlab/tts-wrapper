@@ -1,5 +1,7 @@
 import wave
+
 import boto3
+
 from .tts import TTS
 
 
@@ -10,9 +12,9 @@ class AwsCredentials(object):
 
 
 class PollyTTS(TTS):
-    def __init__(self, voice_name=None, lang=None, creds: AwsCredentials = None) -> None:
-        super().__init__(voice_name=voice_name or 'Joanna', creds=creds, lang=lang)
-        if self.creds:
+    def __init__(self, creds: AwsCredentials = None, voice_name=None, lang=None) -> None:
+        super().__init__(voice_name=voice_name or 'Joanna', lang=lang)
+        if creds:
             boto_session = boto3.Session(
                 aws_access_key_id=creds.aws_key_id, aws_secret_access_key=creds.aws_access_key)
         else:

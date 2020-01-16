@@ -1,29 +1,31 @@
 from google.cloud import texttospeech
+from google.oauth2 import service_account
+
 from .tts import TTS
 
 
 class GoogleTTS(TTS):
-    def __init__(self, voice_name=None, lang=None, creds=None) -> None:
-        super().__init__(voice_name=voice_name or 'en-US-Wavenet-C', creds=creds, lang=lang)
+    def __init__(self, creds: str, voice_name=None, lang=None) -> None:
+        super().__init__(voice_name=voice_name or 'en-US-Wavenet-C', lang=lang)
+        google_creds = service_account.Credentials.from_service_account_file(
+            creds) if creds else None
+        self.client = texttospeech.TextToSpeechClient(credentials=google_creds)
 
     def _synth(self, ssml: str, filename: str) -> None:
-        options = dict(VoiceId=self.voice_name)
-        client = texttospeech.TextToSpeechClient()
-
         # pylint: disable=no-member
-        synthesis_input = texttospeech.types.SynthesisInput(ssml=ssml)
+        s_input = texttospeech.types.SynthesisInput(ssml=ssml)
 
         voice = texttospeech.types.VoiceSelectionParams(
-            name=self.voice_name, **options)
+            language_code=self.lang,
+            name=self.voice_name)
 
         audio_config = texttospeech.types.AudioConfig(
             audio_encoding=texttospeech.enums.AudioEncoding.LINEAR16)
         # pylint: enable=no-member
 
-        response = client.synthesize_speech(
-            synthesis_input, voice, audio_config)
+        resp = self.client.synthesize_speech(s_input, voice, audio_config)
 
-        assert response.audio_content
+        assert resp.audio_content
 
-        with open(filename, 'wb') as wav:
-            wav.write(response.audio_content)
+        with open(filename, 'wb') as f:
+            f.write(resp.audio_content)

@@ -54,8 +54,8 @@ def patch_microsoft_tts(mocker, tts):
     mocked_resp.status_code = 200
     mocked_resp.content = resp
 
-    #tts._fetch_access_token = MagicMock()
-    #tts._fetch_access_token.return_value = 'mocked-access-token'
+    tts._fetch_access_token = MagicMock()
+    tts._fetch_access_token.return_value = 'mocked-access-token'
 
 
 def test_microsoft(mocker):
@@ -64,8 +64,9 @@ def test_microsoft(mocker):
         tts.synth('hello world', TEST_FILE)
 
 
-def test_microsoft_repeated_synth():
+def test_microsoft_repeated_synth(mocker):
     with managed_tts(MicrosoftTTS, creds='fakecreds') as tts:
+        patch_microsoft_tts(mocker, tts)
         tts.synth('hello world', TEST_FILE)
         check_audio_file(TEST_FILE)
         os.remove(TEST_FILE)

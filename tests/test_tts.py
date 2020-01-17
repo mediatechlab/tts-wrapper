@@ -3,7 +3,7 @@ import os
 import pickle
 from unittest.mock import MagicMock
 
-from tts_wrapper import GoogleTTS, MicrosoftTTS, PollyTTS
+from tts_wrapper import GoogleTTS, MicrosoftTTS, PollyTTS, AwsCredentials
 
 
 TEST_DIR = '/tmp/tts-wrapper'
@@ -39,7 +39,9 @@ def setup_module():
 
 def test_polly():
     resp = load_pickle(os.path.join(TEST_DATA_DIR, 'polly.pickle'))
-    with managed_tts(PollyTTS) as tts:
+    creds = AwsCredentials('AWS_ID', 'AWS_KEY', region='us-east-1')
+
+    with managed_tts(PollyTTS, creds=creds) as tts:
         tts.polly_client = MagicMock()
         synth_resp = tts.polly_client.synthesize_speech.return_value
         synth_resp['AudioStream'] = MagicMock()

@@ -3,22 +3,11 @@ import os
 import pickle
 from unittest.mock import MagicMock
 
-from tts_wrapper import AwsCredentials, GoogleTTS, MicrosoftTTS, PollyTTS
+from tts_wrapper import GoogleTTS, MicrosoftTTS, PollyTTS
+
 
 TEST_DIR = '/tmp/tts-wrapper'
 TEST_FILE = os.path.join(TEST_DIR, 'file.wav')
-SECRETS_DIR = '.secrets'
-
-
-def load_test_aws_creds():
-    with open(os.path.join(SECRETS_DIR, 'aws')) as f:
-        lines = [l.strip() for l in f.readlines()]
-        return AwsCredentials(lines[0], lines[1])
-
-
-def load_test_ms_creds():
-    with open(os.path.join(SECRETS_DIR, 'microsoft')) as f:
-        return f.read().strip()
 
 
 def load_pickle(path):
@@ -47,34 +36,36 @@ def setup_module():
     os.makedirs(TEST_DIR, exist_ok=True)
 
 
-def test_polly_with_defaults():
+def test_polly():
+    resp = load_pickle('tests/polly_success.pickle')
     with managed_tts(PollyTTS) as tts:
+        tts.polly_client = MagicMock()
+        synth_resp = tts.polly_client.synthesize_speech.return_value
+        synth_resp['AudioStream'] = MagicMock()
+        synth_resp['AudioStream'].read.return_value = resp
+
         tts.synth('hello world', TEST_FILE)
 
 
-def test_polly_with_creds():
-    creds = load_test_aws_creds()
-    with managed_tts(PollyTTS, creds=creds) as tts:
-        tts.synth('hello world', TEST_FILE)
-
-
-def test_microsoft(mocker):
+def patch_microsoft_tts(mocker, tts):
     resp = load_pickle('tests/microsoft_success.pickle')
     mock_post = mocker.patch('requests.post')
     mocked_resp = mock_post.return_value
     mocked_resp.status_code = 200
     mocked_resp.content = resp
 
+    #tts._fetch_access_token = MagicMock()
+    #tts._fetch_access_token.return_value = 'mocked-access-token'
+
+
+def test_microsoft(mocker):
     with managed_tts(MicrosoftTTS, creds='fakecreds') as tts:
-        tts._fetch_access_token = MagicMock()
-        mocked_access_token = tts._fetch_access_token.return_value
-        mocked_access_token.return_value = 'mocked-access-token'
+        patch_microsoft_tts(mocker, tts)
         tts.synth('hello world', TEST_FILE)
 
 
 def test_microsoft_repeated_synth():
-    creds = load_test_ms_creds()
-    with managed_tts(MicrosoftTTS, creds=creds) as tts:
+    with managed_tts(MicrosoftTTS, creds='fakecreds') as tts:
         tts.synth('hello world', TEST_FILE)
         check_audio_file(TEST_FILE)
         os.remove(TEST_FILE)

@@ -8,6 +8,14 @@ Currently the following services are supported:
 - Google TTS
 - Microsoft TTS
 
+## Installation
+
+Install using pip.
+
+```
+pip install TTS-Wrapper
+```
+
 ## Usage
 
 Simply instantiate an object from the desired service and call `synth()`.

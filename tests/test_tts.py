@@ -1,19 +1,29 @@
 from contextlib import contextmanager
 import os
 import pickle
+import shutil
 from unittest.mock import MagicMock
+import pytest
 
-from tts_wrapper import GoogleTTS, MicrosoftTTS, PollyTTS, AwsCredentials
+from tts_wrapper import (
+    AwsCredentials, GoogleTTS, MicrosoftTTS, PollyTTS, WatsonTTS)
 
 
-TEST_DIR = '/tmp/tts-wrapper'
-TEST_FILE = os.path.join(TEST_DIR, 'speech.wav')
-TEST_DATA_DIR = os.path.join('tests', 'data')
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+
+TMP_DIR = '/tmp/tts-wrapper'
+TMP_SPEECH = os.path.join(TMP_DIR, 'speech.wav')
+TEST_DATA_DIR = os.path.join(SCRIPT_DIR, 'data')
 
 
 def load_pickle(path):
     with open(path, 'rb') as f:
         return pickle.load(f)
+
+
+def load_resp_wav():
+    with open(os.path.join(TEST_DATA_DIR, 'test.wav'), 'rb') as f:
+        return f.read()
 
 
 def check_audio_file(path):
@@ -22,7 +32,7 @@ def check_audio_file(path):
 
 
 @contextmanager
-def managed_tts(cls, *args, _filename=TEST_FILE, **kwargs):
+def managed_tts(cls, *args, _filename=TMP_SPEECH, **kwargs):
     tts = cls(*args, **kwargs)
     assert not os.path.exists(_filename)
     try:
@@ -34,7 +44,9 @@ def managed_tts(cls, *args, _filename=TEST_FILE, **kwargs):
 
 
 def setup_module():
-    os.makedirs(TEST_DIR, exist_ok=True)
+    if os.path.exists(TMP_DIR):
+        shutil.rmtree(TMP_DIR)
+        os.makedirs(TMP_DIR)
 
 
 def test_polly():
@@ -47,11 +59,11 @@ def test_polly():
         synth_resp['AudioStream'] = MagicMock()
         synth_resp['AudioStream'].read.return_value = resp
 
-        tts.synth('hello world', TEST_FILE)
+        tts.synth('hello world', TMP_SPEECH)
 
 
 def patch_microsoft_tts(mocker, tts):
-    resp = load_pickle(os.path.join(TEST_DATA_DIR, 'microsoft.pickle'))
+    resp = load_resp_wav()
     mock_post = mocker.patch('requests.post')
     mocked_resp = mock_post.return_value
     mocked_resp.status_code = 200
@@ -64,24 +76,31 @@ def patch_microsoft_tts(mocker, tts):
 def test_microsoft(mocker):
     with managed_tts(MicrosoftTTS, creds='fakecreds') as tts:
         patch_microsoft_tts(mocker, tts)
-        tts.synth('hello world', TEST_FILE)
+        tts.synth('hello world', TMP_SPEECH)
 
 
 def test_microsoft_repeated_synth(mocker):
     with managed_tts(MicrosoftTTS, creds='fakecreds') as tts:
         patch_microsoft_tts(mocker, tts)
-        tts.synth('hello world', TEST_FILE)
-        check_audio_file(TEST_FILE)
-        os.remove(TEST_FILE)
-        tts.synth('bye world', TEST_FILE)
+        tts.synth('hello world', TMP_SPEECH)
+        check_audio_file(TMP_SPEECH)
+        os.remove(TMP_SPEECH)
+        tts.synth('bye world', TMP_SPEECH)
 
 
 def test_google(mocker):
-    resp = load_pickle(os.path.join(TEST_DATA_DIR, 'google.pickle'))
+    resp = load_resp_wav()
     mocked_client = mocker.patch(
         'google.cloud.texttospeech.TextToSpeechClient')
-    google_resp = mocked_client.return_value.synthesize_speech.return_value
-    google_resp.audio_content = resp
+    mocked_client.return_value.synthesize_speech.return_value.audio_content = resp
 
     with managed_tts(GoogleTTS) as tts:
-        tts.synth('hello world', TEST_FILE)
+        tts.synth('hello world', TMP_SPEECH)
+
+
+def test_watson(mocker):
+    resp = load_resp_wav()
+    with managed_tts(WatsonTTS, api_key='api_key', api_url='api_url') as tts:
+        tts.client = MagicMock()
+        tts.client.synthesize.return_value.get_result.return_value.content = resp
+        tts.synth('hello world', TMP_SPEECH)

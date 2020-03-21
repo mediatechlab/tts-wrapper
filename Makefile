@@ -4,7 +4,7 @@
 	mkdir .stamps
 
 .stamps/lib: .stamps/ tts_wrapper/* README.md requirements.txt setup.py
-	rm -r build/ dist/
+	rm -r build/ dist/ || /bin/true
 	python setup.py bdist_wheel
 	twine check dist/*
 	touch .stamps/lib

@@ -9,6 +9,7 @@ Currently the following services are supported:
 - AWS Polly
 - Google TTS
 - Microsoft TTS
+- IBM Watson
 
 ## Installation
 
@@ -37,7 +38,7 @@ You can change the default voice by specifying the voice name and the language c
 tts = PollyTTS(voice_name='Camila', lang='pt-BR')
 ```
 
-Check out the list of available voices for [Polly](https://docs.aws.amazon.com/polly/latest/dg/voicelist.html), [Google](https://cloud.google.com/text-to-speech/docs/voices), and [Microsoft](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#get-a-list-of-voices).
+Check out the list of available voices for [Polly](https://docs.aws.amazon.com/polly/latest/dg/voicelist.html), [Google](https://cloud.google.com/text-to-speech/docs/voices), [Microsoft](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#get-a-list-of-voices), and [Watson](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices).
 
 ### SSML
 
@@ -49,7 +50,7 @@ tts.synth('Hello, <break time="3s"/> world!')
 
 **You don't need to wrap it with the `<speak></speak>` tag as it is automatically used with the required parameters for each TTS service.**
 
-Learn which tags are available for each service: [Polly](https://docs.aws.amazon.com/polly/latest/dg/supportedtags.html), [Google](https://cloud.google.com/text-to-speech/docs/ssml), and [Microsoft](https://docs.microsoft.com/en-us/cortana/skills/speech-synthesis-markup-language).
+Learn which tags are available for each service: [Polly](https://docs.aws.amazon.com/polly/latest/dg/supportedtags.html), [Google](https://cloud.google.com/text-to-speech/docs/ssml), [Microsoft](https://docs.microsoft.com/en-us/cortana/skills/speech-synthesis-markup-language), and [Watson](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-ssml).
 
 ### Credentials
 
@@ -83,6 +84,16 @@ Just provide your [subscription key](https://docs.microsoft.com/en-us/azure/cogn
 from tts_wrapper import MicrosoftTTS
 
 tts = MicrosoftTTS(creds='TOKEN')
+```
+
+#### Watson
+
+Pass your [API key and URL](https://cloud.ibm.com/apidocs/text-to-speech/text-to-speech#authentication) to the initializer:
+
+```Python
+from tts_wrapper import WatsonTTS
+
+tts = WatsonTTS(api_key='API_KEY', api_url='API_URL')
 ```
 
 ## License

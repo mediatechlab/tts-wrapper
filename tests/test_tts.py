@@ -46,7 +46,7 @@ def managed_tts(cls, *args, _filename=TMP_SPEECH, **kwargs):
 def setup_module():
     if os.path.exists(TMP_DIR):
         shutil.rmtree(TMP_DIR)
-        os.makedirs(TMP_DIR)
+    os.makedirs(TMP_DIR)
 
 
 def test_polly():

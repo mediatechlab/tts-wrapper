@@ -5,10 +5,10 @@ HERE = pathlib.Path(__file__).parent
 
 setup(
     name='TTS-Wrapper',
-    version='0.4.1',
+    version='0.4.2',
     packages=['tts_wrapper'],
     install_requires=[],
-    extra_requires={
+    extras_require={
         'google': ['google-cloud-texttospeech>=0.5'],
         'polly': ['boto3>=1'],
         'watson': ['ibm_watson>=4.3'],

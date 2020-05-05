@@ -1,11 +1,18 @@
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-from ibm_watson import TextToSpeechV1
+try:
+    from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+    from ibm_watson import TextToSpeechV1
+except:
+    IAMAuthenticator = None
+    TextToSpeechV1 = None
 
-from .tts import TTS
+from .tts import ModuleNotInstalled, TTS
 
 
 class WatsonTTS(TTS):
     def __init__(self, api_key, api_url, voice_name=None, lang=None) -> None:
+        if IAMAuthenticator is None or TextToSpeechV1 is None:
+            raise ModuleNotInstalled('ibm-watson')
+
         super().__init__(voice_name=voice_name or 'en-US_LisaV3Voice', lang=lang)
         client = TextToSpeechV1(authenticator=IAMAuthenticator(api_key))
         client.set_service_url(api_url)

@@ -1,8 +1,11 @@
 import wave
 
-import boto3
+from .tts import ModuleNotInstalled, TTS
 
-from .tts import TTS
+try:
+    import boto3
+except ImportError:
+    boto3 = None
 
 
 class AwsCredentials(object):
@@ -14,6 +17,9 @@ class AwsCredentials(object):
 
 class PollyTTS(TTS):
     def __init__(self, creds: AwsCredentials = None, voice_name=None, lang=None) -> None:
+        if boto3 is None:
+            raise ModuleNotInstalled('boto3')
+
         super().__init__(voice_name=voice_name or 'Joanna', lang=lang)
         if creds:
             boto_session = boto3.Session(

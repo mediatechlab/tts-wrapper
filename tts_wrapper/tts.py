@@ -1,3 +1,9 @@
+class ModuleNotInstalled(Exception):
+    def __init__(self, module: str) -> None:
+        message = f'Module {module} is not installed. It is not included with tts-wrapper.'
+        super().__init__(message)
+
+
 class TTS(object):
     def __init__(self, voice_name=None, lang=None) -> None:
         '''

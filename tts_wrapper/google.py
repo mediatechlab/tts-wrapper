@@ -1,7 +1,11 @@
-from google.cloud import texttospeech
-from google.oauth2 import service_account
+try:
+    from google.cloud import texttospeech
+    from google.oauth2 import service_account
+except ImportError:
+    texttospeech = None
+    service_account = None
 
-from .tts import TTS
+from .tts import TTS, ModuleNotInstalled
 
 
 class GoogleTTS(TTS):
@@ -10,6 +14,9 @@ class GoogleTTS(TTS):
         @param creds: The path to the json file that contains the credentials. 
         If None, assumes that the environment variable is set.
         '''
+        if texttospeech is None or service_account is None:
+            raise ModuleNotInstalled('google-cloud-texttospeech')
+
         super().__init__(voice_name=voice_name or 'en-US-Wavenet-C', lang=lang)
         google_creds = service_account.Credentials.from_service_account_file(
             creds) if creds else None

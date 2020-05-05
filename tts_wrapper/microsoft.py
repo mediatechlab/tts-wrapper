@@ -1,10 +1,16 @@
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None
 
-from .tts import TTS
+from .tts import ModuleNotInstalled, TTS
 
 
 class MicrosoftTTS(TTS):
     def __init__(self, creds: str, voice_name=None, lang=None) -> None:
+        if requests is None:
+            raise ModuleNotInstalled('requests')
+
         super().__init__(voice_name=voice_name or 'en-US-JessaNeural', lang=lang)
         self.access_token = None
         self.creds = creds

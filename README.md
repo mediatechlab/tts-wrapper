@@ -15,8 +15,16 @@ Currently the following services are supported:
 
 Install using pip.
 
-```
+```sh
 pip install TTS-Wrapper
+```
+
+**Note: for each service you want to use, you have to install the required packages.**
+
+Example: to use `google` and `watson`:
+
+```sh
+pip install TTS-Wrapper[google, watson]
 ```
 
 ## Usage

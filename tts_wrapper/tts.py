@@ -1,4 +1,12 @@
-class ModuleNotInstalled(Exception):
+class TTSWException(Exception):
+    pass
+
+
+class SynthError(TTSWException):
+    pass
+
+
+class ModuleNotInstalled(TTSWException):
     def __init__(self, module: str) -> None:
         message = f'Module {module} is not installed. It is not included with tts-wrapper.'
         super().__init__(message)
@@ -25,4 +33,8 @@ class TTS(object):
         @param filename: the output wave file path.
         '''
         wrapped_ssml = self._wrap_ssml(ssml)
-        self._synth(wrapped_ssml, filename)
+        try:
+            self._synth(wrapped_ssml, filename)
+        except Exception as e:
+            raise SynthError(
+                f'Error while calling synth with "{(ssml[:100] + "...") if len(ssml) > 100 else ssml}"') from e

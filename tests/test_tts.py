@@ -7,6 +7,7 @@ import pytest
 
 from tts_wrapper import (
     AwsCredentials, GoogleTTS, MicrosoftTTS, PollyTTS, WatsonTTS)
+from tts_wrapper.tts import TTS, SynthError
 
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -104,3 +105,12 @@ def test_watson(mocker):
         tts.client = MagicMock()
         tts.client.synthesize.return_value.get_result.return_value.content = resp
         tts.synth('hello world', TMP_SPEECH)
+
+
+def test_synth_error(mocker):
+    tts = TTS()
+    tts._synth = MagicMock(side_effect=Exception('mock exception'))
+    with pytest.raises(SynthError):
+        tts.synth('hi', TMP_SPEECH)
+    with pytest.raises(SynthError):
+        tts.synth('hi' * 1000, TMP_SPEECH)

@@ -5,7 +5,7 @@ HERE = pathlib.Path(__file__).parent
 
 setup(
     name='TTS-Wrapper',
-    version='0.4.2',
+    version='0.4.3',
     packages=['tts_wrapper'],
     install_requires=[],
     extras_require={

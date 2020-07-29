@@ -7,13 +7,14 @@ from .tts import ModuleNotInstalled, TTS
 
 
 class MicrosoftTTS(TTS):
-    def __init__(self, creds: str, voice_name=None, lang=None) -> None:
+    def __init__(self, creds: str, voice_name=None, lang=None, fetch_token_url=None) -> None:
         if requests is None:
             raise ModuleNotInstalled('requests')
 
         super().__init__(voice_name=voice_name or 'en-US-JessaNeural', lang=lang)
         self.access_token = None
         self.creds = creds
+        self.fetch_token_url = fetch_token_url or "https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken"
 
     def _wrap_ssml(self, ssml) -> str:
         return (f'<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="{self.lang}">'
@@ -21,7 +22,7 @@ class MicrosoftTTS(TTS):
                 '</speak>')
 
     def _fetch_access_token(self):
-        fetch_token_url = "https://eastus.api.cognitive.microsoft.com/sts/v1.0/issueToken"
+        fetch_token_url = self.fetch_token_url
         headers = {
             'Ocp-Apim-Subscription-Key': self.creds
         }

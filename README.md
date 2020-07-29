@@ -94,6 +94,12 @@ from tts_wrapper import MicrosoftTTS
 tts = MicrosoftTTS(creds='TOKEN')
 ```
 
+If your region is not "US-East", you must change the endpoint like so:
+
+```Python
+tts = MicrosoftTTS(creds='TOKEN', fetch_token_url='https://brazilsouth.api.cognitive.microsoft.com/sts/v1.0/issuetoken')
+```
+
 #### Watson
 
 Pass your [API key and URL](https://cloud.ibm.com/apidocs/text-to-speech/text-to-speech#authentication) to the initializer:

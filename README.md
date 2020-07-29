@@ -94,10 +94,10 @@ from tts_wrapper import MicrosoftTTS
 tts = MicrosoftTTS(creds='TOKEN')
 ```
 
-If your region is not "US-East", you must change the endpoint like so:
+If your region is not "useast", you must change it like so:
 
 ```Python
-tts = MicrosoftTTS(creds='TOKEN', fetch_token_url='https://brazilsouth.api.cognitive.microsoft.com/sts/v1.0/issuetoken')
+tts = MicrosoftTTS(creds='TOKEN', region='brazilsouth')
 ```
 
 #### Watson

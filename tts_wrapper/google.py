@@ -24,14 +24,14 @@ class GoogleTTS(TTS):
 
     def _synth(self, ssml: str, filename: str) -> None:
         # pylint: disable=no-member
-        s_input = texttospeech.types.SynthesisInput(ssml=ssml)
+        s_input = texttospeech.SynthesisInput(ssml=ssml)
 
-        voice = texttospeech.types.VoiceSelectionParams(
+        voice = texttospeech.VoiceSelectionParams(
             language_code=self.lang,
             name=self.voice_name)
 
-        audio_config = texttospeech.types.AudioConfig(
-            audio_encoding=texttospeech.enums.AudioEncoding.LINEAR16)
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.LINEAR16)
         # pylint: enable=no-member
 
         resp = self.client.synthesize_speech(s_input, voice, audio_config)

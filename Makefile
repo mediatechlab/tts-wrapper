@@ -17,3 +17,6 @@ upload: .stamps/lib
 	python setup.py bdist_wheel
 	twine check dist/*
 	touch .stamps/lib
+
+requirements.txt: pyproject.toml
+	poetry export --dev --without-hashes -f requirements.txt > requirements.txt

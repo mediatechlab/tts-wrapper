@@ -3,7 +3,7 @@
 build-lib: .stamps/lib
 
 tests:
-	pytest
+	poetry run pytest
 
 upload-testing: .stamps/lib
 	twine upload --repository-url https://test.pypi.org/legacy/ dist/*

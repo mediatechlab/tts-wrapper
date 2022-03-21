@@ -7,7 +7,7 @@ from .tts import ModuleNotInstalled, TTS
 
 
 class MicrosoftTTS(TTS):
-    def __init__(self, creds: str, voice_name=None, lang=None, region=None) -> None:
+    def __init__(self, creds: str, voice_name=None, lang=None, region=None, verify=True) -> None:
         if requests is None:
             raise ModuleNotInstalled('requests')
 
@@ -15,6 +15,10 @@ class MicrosoftTTS(TTS):
         self.access_token = None
         self.creds = creds
         self.region = region or 'eastus'
+        self.sess = requests.Session()
+        self.sess.verify=verify
+        if verify is False:
+            requests.packages.urllib3.disable_warnings()
 
     def _wrap_ssml(self, ssml) -> str:
         return (f'<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="{self.lang}">'
@@ -26,7 +30,7 @@ class MicrosoftTTS(TTS):
         headers = {
             'Ocp-Apim-Subscription-Key': self.creds
         }
-        response = requests.post(fetch_token_url, headers=headers)
+        response = self.sess.post(fetch_token_url, headers=headers)
         return str(response.text)
 
     def _synth(self, ssml: str, filename: str) -> None:
@@ -39,7 +43,7 @@ class MicrosoftTTS(TTS):
             'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm',
         }
 
-        response = requests.post(
+        response = self.sess.post(
             f'https://{self.region}.tts.speech.microsoft.com/cognitiveservices/v1', headers=headers, data=ssml.encode('utf-8'))
 
         if response.status_code != 200:

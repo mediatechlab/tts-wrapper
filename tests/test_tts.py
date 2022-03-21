@@ -65,10 +65,10 @@ def test_polly():
 
 def patch_microsoft_tts(mocker, tts):
     resp = load_resp_wav()
-    mock_post = mocker.patch('requests.post')
-    mocked_resp = mock_post.return_value
-    mocked_resp.status_code = 200
-    mocked_resp.content = resp
+    tts.sess = MagicMock()
+    tts.sess.post.return_value = MagicMock()
+    tts.sess.post.return_value.status_code = 200
+    tts.sess.post.return_value.content = resp
 
     tts._fetch_access_token = MagicMock()
     tts._fetch_access_token.return_value = 'mocked-access-token'

@@ -35,7 +35,7 @@ Simply instantiate an object from the desired service and call `synth()`.
 from tts_wrapper import PollyTTS
 
 tts = PollyTTS()
-tts.synth('Hello, world!', 'hello.wav')
+tts.synth('<speak>Hello, world!</speak>', 'hello.wav')
 ```
 
 ### Selecting a Voice
@@ -43,35 +43,40 @@ tts.synth('Hello, world!', 'hello.wav')
 You can change the default voice by specifying the voice name and the language code:
 
 ```Python
-tts = PollyTTS(voice_name='Camila', lang='pt-BR')
+tts.set_voice(voice_name='Camila', lang='pt-BR')
 ```
 
 Check out the list of available voices for [Polly](https://docs.aws.amazon.com/polly/latest/dg/voicelist.html), [Google](https://cloud.google.com/text-to-speech/docs/voices), [Microsoft](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#get-a-list-of-voices), and [Watson](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-voices).
 
 ### SSML
 
-You can also use [SSML](https://en.wikipedia.org/wiki/Speech_Synthesis_Markup_Language) markup to control the output, like so:
+You can also use [SSML](https://en.wikipedia.org/wiki/Speech_Synthesis_Markup_Language) markup to control the output.
 
 ```Python
-tts.synth('Hello, <break time="3s"/> world!')
+tts.synth('<speak>Hello, <break time="3s"/> world!</speak>', 'hello.wav')
 ```
 
-**You don't need to wrap it with the `<speak></speak>` tag as it is automatically used with the required parameters for each TTS service.**
+As a convenience you can use the `create_ssml_root` function that will create the correct boilerplate tags for each engine:
+
+```Python
+tts = PollyTTS()
+tts.synth(tts.create_ssml_root().add('Hello, <break time="3s"/> world!'), 'hello.wav')
+```
 
 Learn which tags are available for each service: [Polly](https://docs.aws.amazon.com/polly/latest/dg/supportedtags.html), [Google](https://cloud.google.com/text-to-speech/docs/ssml), [Microsoft](https://docs.microsoft.com/en-us/cortana/skills/speech-synthesis-markup-language), and [Watson](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-ssml).
 
 ### Credentials
 
-You need to setup credentials to access each service.
+To setup credentials to access each service, call the `set_credentials()` method.
 
 #### Polly
 
-If you don't explicitly define credentials, `boto3` will try to find them in your system's credentials file or your environment variables. However, you can specify them with:
+If you don't explicitly define credentials, `boto3` will try to find them in your system's credentials file or your environment variables. However, you can specify them with a tuple:
 
 ```Python
-from tts_wrapper import PollyTTS, AwsCredentials
-
-tts = PollyTTS(creds=AwsCredentials('AWS_KEY_ID', 'AWS_ACCESS_KEY'))
+from tts_wrapper import PollyTTS
+tts = PollyTTS()
+tts.set_credentials((region, aws_key_id, aws_access_key))
 ```
 
 #### Google
@@ -80,8 +85,8 @@ Point to your [Oauth 2.0 credentials file](https://developers.google.com/identit
 
 ```Python
 from tts_wrapper import GoogleTTS
-
-tts = GoogleTTS(creds='path/to/creds.json')
+tts = GoogleTTS()
+tts.set_credentials('path/to/creds.json')
 ```
 
 #### Microsoft
@@ -90,14 +95,14 @@ Just provide your [subscription key](https://docs.microsoft.com/en-us/azure/cogn
 
 ```Python
 from tts_wrapper import MicrosoftTTS
-
-tts = MicrosoftTTS(creds='TOKEN')
+tts = MicrosoftTTS()
+tts.set_credentials('TOKEN')
 ```
 
-If your region is not "useast", you must change it like so:
+If your region is not the default "useast", you can change it like so:
 
 ```Python
-tts = MicrosoftTTS(creds='TOKEN', region='brazilsouth')
+tts = MicrosoftTTS(region='brazilsouth')
 ```
 
 #### Watson
@@ -106,8 +111,8 @@ Pass your [API key and URL](https://cloud.ibm.com/apidocs/text-to-speech/text-to
 
 ```Python
 from tts_wrapper import WatsonTTS
-
-tts = WatsonTTS(api_key='API_KEY', api_url='API_URL')
+tts = WatsonTTS
+tts.set_credentials(('API_KEY', 'API_URL'))
 ```
 
 ## License

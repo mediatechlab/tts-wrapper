@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tts-wrapper"
-version = "0.5.3"
+version = "0.6.0"
 description="A hassle-free Python library that allows one to use text-to-speech APIs with the same interface"
 authors = ["Giulio Bottari <giuliobottari@gmail.com>"]
 license = "MIT"

@@ -27,6 +27,10 @@ jobs:
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
+        env:
+          POLLY_REGION: ${{ secrets.POLLY_REGION }}
+          POLLY_AWS_ID: ${{ secrets.POLLY_AWS_ID }}
+          POLLY_AWS_KEY: ${{ secrets.POLLY_AWS_KEY }}
         run: |
           pip install -r requirements.dev.txt
           pytest

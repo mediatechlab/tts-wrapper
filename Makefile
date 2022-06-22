@@ -6,7 +6,8 @@ tests:
 api_tests:
 	source .secrets/.env && \
 	export POLLY_REGION POLLY_AWS_ID POLLY_AWS_KEY && \
-	poetry run pytest tests/test_apis.py
+	export MICROSOFT_KEY && \
+	poetry run pytest -s tests/test_apis.py
 
 publish:
 	poetry publish --build

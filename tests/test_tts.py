@@ -102,7 +102,7 @@ def test_ssml_synth(all_patched_tts):
 
     for tts in all_patched_tts:
         assert not os.path.exists(filename)
-        tts.synth(tts.create_ssml_root().add("hello world"), filename)
+        tts.synth(tts.wrap_ssml("hello world"), filename)
         check_audio_file(filename)
         os.remove(filename)
 

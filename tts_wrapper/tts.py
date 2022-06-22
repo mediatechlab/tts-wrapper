@@ -9,7 +9,7 @@ class AbstractTTS(ABC):
         pass
 
     @abstractmethod
-    def create_ssml_root(self) -> AbstractSSMLNode:
+    def wrap_ssml(self, ssml: AbstractSSMLNode) -> AbstractSSMLNode:
         pass
 
     @abstractmethod
@@ -26,8 +26,8 @@ class BaseTTS(AbstractTTS):
         self.voice_name = voice_name
         self.lang = lang or "en-US"
 
-    def create_ssml_root(self) -> SSMLNode:
-        return SSMLNode.speak()
+    def wrap_ssml(self, ssml: AbstractSSMLNode) -> AbstractSSMLNode:
+        return SSMLNode.speak().add(ssml)
 
     def set_voice(self, voice_name: str, lang: str = None) -> None:
         self.voice_name = voice_name

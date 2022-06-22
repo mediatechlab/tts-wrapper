@@ -18,3 +18,10 @@ def test_tag_with_children():
 
 def test_add_node():
     assert str(SSMLNode("speak").add(SSMLNode("a"))) == "<speak><a></a></speak>"
+
+
+def test_add_text():
+    assert (
+        str(SSMLNode("speak").add(SSMLNode("a").add("hello")))
+        == "<speak><a>hello</a></speak>"
+    )

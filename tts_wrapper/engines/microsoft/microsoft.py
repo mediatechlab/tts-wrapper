@@ -1,5 +1,5 @@
 from ...exceptions import ModuleNotInstalled
-from ...ssml import SSMLNode
+from ...ssml import AbstractSSMLNode, SSMLNode
 from ...tts import BaseTTS
 
 try:
@@ -22,7 +22,7 @@ class MicrosoftTTS(BaseTTS):
         self.sess = requests.Session()
         self.sess.verify = verify_ssl
 
-    def create_ssml_root(self) -> SSMLNode:
+    def wrap_ssml(self, ssml: AbstractSSMLNode) -> AbstractSSMLNode:
         return SSMLNode.speak(
             {
                 "version": "1.0",
@@ -30,7 +30,7 @@ class MicrosoftTTS(BaseTTS):
                 "xmlns": "https://www.w3.org/2001/10/synthesis",
                 "xmlns:mstts": "https://www.w3.org/2001/mstts",
             }
-        ).add(SSMLNode.voice({"name": self.voice_name}))
+        ).add(SSMLNode.voice({"name": self.voice_name}).add(ssml))
 
     def set_credentials(self, credentials: str) -> None:
         self.credentials = credentials

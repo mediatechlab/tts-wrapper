@@ -38,7 +38,9 @@ class GoogleTTS(BaseTTS):
             audio_encoding=texttospeech.AudioEncoding.LINEAR16
         )
 
-        resp = self.client.synthesize_speech(s_input, voice, audio_config)
+        resp = self.client.synthesize_speech(
+            input=s_input, voice=voice, audio_config=audio_config
+        )
 
         assert resp.audio_content
 

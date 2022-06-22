@@ -32,6 +32,10 @@ jobs:
           POLLY_AWS_ID: ${{ secrets.POLLY_AWS_ID }}
           POLLY_AWS_KEY: ${{ secrets.POLLY_AWS_KEY }}
           MICROSOFT_KEY: ${{ secrets.MICROSOFT_KEY }}
+          GOOGLE_SA_PATH: ${{ secrets.GOOGLE_SA_PATH }}
+          GOOGLE_SA_FILE: ${{ secrets.GOOGLE_SA_FILE }}
         run: |
+          install -Dv /dev/null $GOOGLE_SA_PATH
+          echo $GOOGLE_SA_FILE > $GOOGLE_SA_PATH
           pip install -r requirements.dev.txt
           pytest

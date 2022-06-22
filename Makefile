@@ -7,6 +7,7 @@ api_tests:
 	source .secrets/.env && \
 	export POLLY_REGION POLLY_AWS_ID POLLY_AWS_KEY && \
 	export MICROSOFT_KEY && \
+	export GOOGLE_SA_PATH && \
 	poetry run pytest -s tests/test_apis.py
 
 publish:

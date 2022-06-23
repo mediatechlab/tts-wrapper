@@ -30,7 +30,7 @@ def check_audio_file(path):
 
 @pytest.fixture
 def patched_polly():
-    tts = PollyTTS()
+    tts = PollyTTS(credentials=("region", "API_KEY", "API_SECRET"))
     tts.client = MagicMock()
     synth_resp = tts.client.synthesize_speech.return_value
     synth_resp["AudioStream"] = MagicMock()
@@ -43,7 +43,7 @@ def patched_polly():
 @pytest.fixture
 def patched_ms():
     resp = load_resp_wav()
-    tts = MicrosoftTTS()
+    tts = MicrosoftTTS(credentials="KEY")
     tts.sess = MagicMock()
     tts.sess.post.return_value = MagicMock()
     tts.sess.post.return_value.status_code = 200
@@ -56,21 +56,23 @@ def patched_ms():
 
 @pytest.fixture
 def patched_google(mocker):
-    resp = load_resp_wav()
-    mocked_client = mocker.patch("google.cloud.texttospeech.TextToSpeechClient")
-    mocked_client.return_value.synthesize_speech.return_value.audio_content = resp
+    mocked_client = MagicMock()
+    mocked_client.return_value.synthesize_speech.return_value.audio_content = (
+        load_resp_wav()
+    )
 
-    from tts_wrapper.engines.google.google import texttospeech
+    class MockedGoogleTTS(GoogleTTS):
+        def _setup_client(self, credentials):
+            return mocked_client()
 
-    tts = GoogleTTS()
-    tts.client = texttospeech.TextToSpeechClient(None)
+    tts = MockedGoogleTTS(credentials="PATH")
     return tts
 
 
 @pytest.fixture
 def patched_watson():
     resp = load_resp_wav()
-    tts = WatsonTTS()
+    tts = WatsonTTS(credentials=("key", "url"))
     tts.client = MagicMock()
     tts.client.synthesize.return_value.get_result.return_value.content = resp
     return tts

@@ -20,8 +20,7 @@ CREDS = {
 
 def test_actual_synth():
     for cls, creds in CREDS.items():
-        tts = cls()
-        tts.set_credentials(creds)
+        tts = cls(credentials=creds)
 
         file_path = "/tmp/audio.mp3"
         assert not os.path.exists(file_path)

@@ -2,7 +2,7 @@ from typing import Optional
 
 from ...exceptions import ModuleNotInstalled
 from ...ssml import AbstractSSMLNode, SSMLNode
-from ...tts import BaseTTS
+from ...tts import SSML, AbstractTTS
 
 try:
     import requests
@@ -10,16 +10,17 @@ except ImportError:
     requests = None  # type: ignore
 
 
-class MicrosoftTTS(BaseTTS):
+class MicrosoftTTS(AbstractTTS):
     def __init__(
-        self, lang=None, voice_name=None, region=None, credentials=None, verify_ssl=True
+        self, credentials: str, lang=None, voice=None, region=None, verify_ssl=True
     ) -> None:
         if requests is None:
             raise ModuleNotInstalled("requests")
 
-        super().__init__(voice_name=voice_name or "en-US-JessaNeural", lang=lang)
-        self.region = region or "eastus"
         self.credentials = credentials
+        self.lang = lang or "en-US"
+        self.voice = voice or "en-US-JessaNeural"
+        self.region = region or "eastus"
         self.access_token: Optional[str] = None
         self.sess = requests.Session()
         self.sess.verify = verify_ssl
@@ -32,12 +33,9 @@ class MicrosoftTTS(BaseTTS):
                 "xmlns": "https://www.w3.org/2001/10/synthesis",
                 "xmlns:mstts": "https://www.w3.org/2001/mstts",
             }
-        ).add(SSMLNode.voice({"name": self.voice_name}).add(ssml))
+        ).add(SSMLNode.voice({"name": self.voice}).add(ssml))
 
-    def set_credentials(self, credentials: str) -> None:
-        self.credentials = credentials
-
-    def synth(self, ssml: str, filename: str) -> None:
+    def synth(self, ssml: SSML, filename: str) -> None:
         self.access_token = self.access_token or self._fetch_access_token()
 
         headers = {

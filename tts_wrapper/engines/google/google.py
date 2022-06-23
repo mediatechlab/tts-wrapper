@@ -1,5 +1,6 @@
+from tts_wrapper.ssml import AbstractSSMLNode, SSMLNode
 from ...exceptions import ModuleNotInstalled
-from ...tts import BaseTTS
+from ...tts import SSML, AbstractTTS
 
 try:
     from google.cloud import texttospeech
@@ -9,29 +10,30 @@ except ImportError:
     service_account = None  # type: ignore
 
 
-class GoogleTTS(BaseTTS):
-    def __init__(self, client=None, lang=None, voice_name=None) -> None:
-        if texttospeech is None or service_account is None:
-            raise ModuleNotInstalled("google-cloud-texttospeech")
-
-        super().__init__(lang=lang, voice_name=voice_name or "en-US-Wavenet-C")
-        self.client = client
-
-    def set_credentials(self, credentials: str) -> None:
+class GoogleTTS(AbstractTTS):
+    def __init__(self, credentials: str, lang=None, voice=None) -> None:
         """
         @param credentials: The path to the json file that contains the credentials.
         """
-        self.client = texttospeech.TextToSpeechClient(
+        if texttospeech is None or service_account is None:
+            raise ModuleNotInstalled("google-cloud-texttospeech")
+
+        self.client = self._setup_client(credentials)
+        self.lang = lang or "en-US"
+        self.voice = voice or "en-US-Wavenet-C"
+
+    def _setup_client(self, credentials: str) -> texttospeech.TextToSpeechClient:
+        return texttospeech.TextToSpeechClient(
             credentials=service_account.Credentials.from_service_account_file(
                 credentials
             )
         )
 
-    def synth(self, ssml: str, filename: str) -> None:
+    def synth(self, ssml: SSML, filename: str) -> None:
         s_input = texttospeech.SynthesisInput(ssml=str(ssml))
 
         voice = texttospeech.VoiceSelectionParams(
-            language_code=self.lang, name=self.voice_name
+            language_code=self.lang, name=self.voice
         )
 
         audio_config = texttospeech.AudioConfig(
@@ -46,3 +48,6 @@ class GoogleTTS(BaseTTS):
 
         with open(filename, "wb") as f:
             f.write(resp.audio_content)
+
+    def wrap_ssml(self, ssml: AbstractSSMLNode) -> AbstractSSMLNode:
+        return SSMLNode.speak().add(ssml)

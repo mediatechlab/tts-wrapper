@@ -1,7 +1,5 @@
-from tts_wrapper import PollyTTS, MicrosoftTTS
+from tts_wrapper import PollyTTS, MicrosoftTTS, GoogleTTS
 import os
-
-from tts_wrapper.engines.google.google import GoogleTTS
 
 POLLY_REGION = os.environ["POLLY_REGION"]
 POLLY_AWS_ID = os.environ["POLLY_AWS_ID"]
@@ -16,14 +14,16 @@ CREDS = {
 }
 
 
-def test_real_synth():
+def test_actual_synth():
     for cls, creds in CREDS.items():
         tts = cls()
         tts.set_credentials(creds)
 
-        file_path = "/tmp/polly.mp3"
+        file_path = "/tmp/audio.mp3"
         assert not os.path.exists(file_path)
-        tts.synth(tts.wrap_ssml("Hello, world!"), file_path)
-        assert os.path.exists(file_path)
-        assert os.path.getsize(file_path) > 1024
-        os.unlink(file_path)
+        try:
+            tts.synth(tts.wrap_ssml("Hello, world!"), file_path)
+            assert os.path.exists(file_path)
+            assert os.path.getsize(file_path) > 1024
+        finally:
+            os.unlink(file_path)

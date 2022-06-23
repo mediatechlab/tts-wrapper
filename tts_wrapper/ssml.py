@@ -1,16 +1,27 @@
 from abc import ABC, abstractmethod
+from typing import Any, Mapping, Optional, Union
 
-Child = object
+Child = Any
+Attr = Mapping[str, Any]
 
 
 class AbstractSSMLNode(ABC):
     @abstractmethod
     def add(self, child: Child) -> "AbstractSSMLNode":
-        pass
+        ...
+
+    @abstractmethod
+    def __str__(self) -> str:
+        ...
 
 
 class SSMLNode(AbstractSSMLNode):
-    def __init__(self, tag: str, attrs=None, children=None) -> None:
+    def __init__(
+        self,
+        tag: str,
+        attrs: Optional[Attr] = None,
+        children: Optional[list[Child]] = None,
+    ) -> None:
         self.tag = tag
         self.attrs = attrs or {}
         self.children = children or []
@@ -24,10 +35,10 @@ class SSMLNode(AbstractSSMLNode):
         self.children.append(child)
         return self
 
-    @staticmethod
-    def speak(attrs=None) -> "SSMLNode":
-        return SSMLNode("speak", attrs)
+    @classmethod
+    def speak(cls, attrs: Optional[Attr] = None) -> "SSMLNode":
+        return cls("speak", attrs)
 
-    @staticmethod
-    def voice(attrs=None) -> "SSMLNode":
-        return SSMLNode("voice", attrs)
+    @classmethod
+    def voice(cls, attrs: Optional[Attr] = None) -> "SSMLNode":
+        return cls("voice", attrs)

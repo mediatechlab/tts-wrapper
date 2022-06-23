@@ -8,6 +8,7 @@ api_tests:
 	export POLLY_REGION POLLY_AWS_ID POLLY_AWS_KEY && \
 	export MICROSOFT_KEY && \
 	export GOOGLE_SA_PATH && \
+	export WATSON_API_KEY WATSON_API_URL && \
 	poetry run pytest -s tests/test_apis.py
 
 publish:

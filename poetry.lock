@@ -215,8 +215,8 @@ protobuf = ">=3.12.0"
 
 [[package]]
 name = "ibm-cloud-sdk-core"
-version = "1.5.1"
-description = "Client library for the IBM Cloud services"
+version = "1.7.3"
+description = "Core library used by SDKs for IBM Cloud Services"
 category = "main"
 optional = true
 python-versions = "*"
@@ -228,14 +228,14 @@ requests = ">=2.0,<3.0"
 
 [[package]]
 name = "ibm-watson"
-version = "4.3.0"
+version = "5.0.2"
 description = "Client library to use the IBM Watson Services"
 category = "main"
 optional = true
 python-versions = "*"
 
 [package.dependencies]
-ibm_cloud_sdk_core = "1.5.1"
+ibm_cloud_sdk_core = "1.7.3"
 python_dateutil = ">=2.5.3"
 requests = ">=2.0,<3.0"
 websocket-client = "0.48.0"
@@ -366,17 +366,16 @@ pyasn1 = ">=0.4.6,<0.5.0"
 
 [[package]]
 name = "pyjwt"
-version = "2.4.0"
+version = "1.7.1"
 description = "JSON Web Token implementation in Python"
 category = "main"
-optional = true
-python-versions = ">=3.6"
+optional = false
+python-versions = "*"
 
 [package.extras]
-crypto = ["cryptography (>=3.3.1)"]
-dev = ["sphinx", "sphinx-rtd-theme", "zope.interface", "cryptography (>=3.3.1)", "pytest (>=6.0.0,<7.0.0)", "coverage[toml] (==5.0.4)", "mypy", "pre-commit"]
-docs = ["sphinx", "sphinx-rtd-theme", "zope.interface"]
-tests = ["pytest (>=6.0.0,<7.0.0)", "coverage[toml] (==5.0.4)"]
+crypto = ["cryptography (>=1.4)"]
+flake8 = ["flake8", "flake8-import-order", "pep8-naming"]
+test = ["pytest (>=4.0.1,<5.0.0)", "pytest-cov (>=2.6.0,<3.0.0)", "pytest-runner (>=4.2,<5.0.0)"]
 
 [[package]]
 name = "pyparsing"
@@ -538,12 +537,12 @@ six = "*"
 google = ["google-cloud-texttospeech"]
 microsoft = ["requests"]
 polly = ["boto3"]
-watson = ["ibm-watson"]
+watson = ["ibm-watson", "PyJWT"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "689db1e92b614dd720f7d0c5da29cad5614370c1823337f2d61442105bf51151"
+content-hash = "abd4f288bf65d89e262dd081105194c8709bdac383636d77ea251a4898da6d64"
 
 [metadata.files]
 atomicwrites = [
@@ -676,10 +675,10 @@ grpcio-status = [
     {file = "grpcio_status-1.47.0-py3-none-any.whl", hash = "sha256:2154fdb8aad20452488712be6879657b508115ca06139fde8897ea8e9bc79367"},
 ]
 ibm-cloud-sdk-core = [
-    {file = "ibm-cloud-sdk-core-1.5.1.tar.gz", hash = "sha256:62b00255df06cb96e32b8daa6dee78b073690591a2d2ec16b24d99f1c39180f7"},
+    {file = "ibm-cloud-sdk-core-1.7.3.tar.gz", hash = "sha256:f472ef5e603230613891b4817e563e77ace3c39cc8a12f47d1e741b867aa6513"},
 ]
 ibm-watson = [
-    {file = "ibm-watson-4.3.0.tar.gz", hash = "sha256:e63aa9cba00d0b00eba82c78a40caf62876001b75dacb5ab7244023367894774"},
+    {file = "ibm-watson-5.0.2.tar.gz", hash = "sha256:b23f46002feb858375c3c599d21ce433967d68b9b87ac9fc4e3e10cccc293e54"},
 ]
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
@@ -778,8 +777,8 @@ pyasn1-modules = [
     {file = "pyasn1_modules-0.2.8-py3.7.egg", hash = "sha256:c29a5e5cc7a3f05926aff34e097e84f8589cd790ce0ed41b67aed6857b26aafd"},
 ]
 pyjwt = [
-    {file = "PyJWT-2.4.0-py3-none-any.whl", hash = "sha256:72d1d253f32dbd4f5c88eaf1fdc62f3a19f676ccbadb9dbc5d07e951b2b26daf"},
-    {file = "PyJWT-2.4.0.tar.gz", hash = "sha256:d42908208c699b3b973cbeb01a969ba6a96c821eefb1c5bfe4c390c01d67abba"},
+    {file = "PyJWT-1.7.1-py2.py3-none-any.whl", hash = "sha256:5c6eca3c2940464d106b99ba83b00c6add741c9becaec087fb7ccdefea71350e"},
+    {file = "PyJWT-1.7.1.tar.gz", hash = "sha256:8d59a976fb773f3e6a39c85636357c4f0e242707394cadadd9814f5cbaa20e96"},
 ]
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},

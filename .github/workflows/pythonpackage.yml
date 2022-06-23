@@ -35,6 +35,8 @@ jobs:
           MICROSOFT_KEY: ${{ secrets.MICROSOFT_KEY }}
           GOOGLE_SA_PATH: ${{ secrets.GOOGLE_SA_PATH }}
           GOOGLE_SA_FILE_B64: ${{ secrets.GOOGLE_SA_FILE_B64 }}
+          WATSON_API_KEY: ${{ secrets.WATSON_API_KEY }}
+          WATSON_API_URL: ${{ secrets.WATSON_API_URL }}
         run: |
           install -D /dev/null $GOOGLE_SA_PATH
           echo $GOOGLE_SA_FILE_B64 | base64 --decode > $GOOGLE_SA_PATH

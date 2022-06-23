@@ -1,4 +1,4 @@
-.PHONY: api_tests tests publish
+.PHONY: api_tests tests publish act-build
 
 tests:
 	poetry run pytest tests/test_ssml.py tests/test_tts.py
@@ -13,6 +13,9 @@ api_tests:
 
 publish:
 	poetry publish --build
+
+act-build:
+	act --secret-file .secrets/.env -a build
 
 requirements.txt: pyproject.toml
 	poetry export --without-hashes -E google -E watson -E polly -E microsoft -f requirements.txt -o requirements.txt

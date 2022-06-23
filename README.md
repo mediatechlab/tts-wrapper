@@ -1,6 +1,6 @@
 # TTS-Wrapper
 
-![](https://github.com/mediatechlab/tts-wrapper/workflows/Python%20package/badge.svg)
+![](https://github.com/mediatechlab/tts-wrapper/workflows/build/badge.svg)
 
 _TTS-Wrapper_ is a hassle-free Python library that allows one to use text-to-speech APIs with the same interface.
 

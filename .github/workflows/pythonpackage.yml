@@ -19,6 +19,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install -r requirements.dev.txt
       - name: Lint with flake8
         run: |
           pip install flake8
@@ -33,9 +34,8 @@ jobs:
           POLLY_AWS_KEY: ${{ secrets.POLLY_AWS_KEY }}
           MICROSOFT_KEY: ${{ secrets.MICROSOFT_KEY }}
           GOOGLE_SA_PATH: ${{ secrets.GOOGLE_SA_PATH }}
-          GOOGLE_SA_FILE: ${{ secrets.GOOGLE_SA_FILE }}
+          GOOGLE_SA_FILE_B64: ${{ secrets.GOOGLE_SA_FILE_B64 }}
         run: |
-          install -Dv /dev/null $GOOGLE_SA_PATH
-          echo $GOOGLE_SA_FILE > $GOOGLE_SA_PATH
-          pip install -r requirements.dev.txt
+          install -D /dev/null $GOOGLE_SA_PATH
+          echo $GOOGLE_SA_FILE_B64 | base64 --decode > $GOOGLE_SA_PATH
           pytest

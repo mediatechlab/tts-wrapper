@@ -25,6 +25,9 @@ microsoft = ["requests"]
 pytest = "^6.2.1"
 pytest-mock = "^3.5.1"
 black = {version = "^22.1.0", allow-prereleases = true}
+types-requests = "^2.27.31"
+mypy = "^0.961"
+types-boto3 = "^1.0.2"
 
 [build-system]
 requires = ["poetry>=0.12"]

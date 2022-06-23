@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Mapping, Optional, Union
+from typing import Any, List, Mapping, Optional
 
 Child = Any
 Attr = Mapping[str, Any]
@@ -20,7 +20,7 @@ class SSMLNode(AbstractSSMLNode):
         self,
         tag: str,
         attrs: Optional[Attr] = None,
-        children: Optional[list[Child]] = None,
+        children: Optional[List[Child]] = None,
     ) -> None:
         self.tag = tag
         self.attrs = attrs or {}

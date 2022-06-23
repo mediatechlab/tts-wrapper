@@ -1,4 +1,7 @@
+from typing import Optional
+
 from tts_wrapper.ssml import AbstractSSMLNode, SSMLNode
+
 from ...exceptions import ModuleNotInstalled
 from ...tts import SSML, AbstractTTS
 
@@ -11,7 +14,9 @@ except ImportError:
 
 
 class GoogleTTS(AbstractTTS):
-    def __init__(self, credentials: str, lang=None, voice=None) -> None:
+    def __init__(
+        self, credentials: str, lang: Optional[str] = None, voice: Optional[str] = None
+    ) -> None:
         """
         @param credentials: The path to the json file that contains the credentials.
         """

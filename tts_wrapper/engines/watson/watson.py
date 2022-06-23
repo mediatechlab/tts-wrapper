@@ -1,3 +1,5 @@
+from typing import Optional, Tuple
+
 from tts_wrapper.ssml import AbstractSSMLNode, SSMLNode
 
 from ...exceptions import ModuleNotInstalled
@@ -10,11 +12,16 @@ except ImportError:
     IAMAuthenticator = None
     TextToSpeechV1 = None
 
-Credentials = tuple[str, str]
+Credentials = Tuple[str, str]
 
 
 class WatsonTTS(AbstractTTS):
-    def __init__(self, credentials: Credentials, voice=None, lang=None) -> None:
+    def __init__(
+        self,
+        credentials: Credentials,
+        voice: Optional[str] = None,
+        lang: Optional[str] = None,
+    ) -> None:
         if IAMAuthenticator is None or TextToSpeechV1 is None:
             raise ModuleNotInstalled("ibm-watson")
 

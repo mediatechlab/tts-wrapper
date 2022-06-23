@@ -12,7 +12,12 @@ except ImportError:
 
 class MicrosoftTTS(AbstractTTS):
     def __init__(
-        self, credentials: str, lang=None, voice=None, region=None, verify_ssl=True
+        self,
+        credentials: str,
+        lang: Optional[str] = None,
+        voice: Optional[str] = None,
+        region: Optional[str] = None,
+        verify_ssl=True,
     ) -> None:
         if requests is None:
             raise ModuleNotInstalled("requests")

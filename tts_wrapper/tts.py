@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Any, Union
+from typing import Union
 
-from . import AbstractSSMLNode, SSMLNode
+from . import AbstractSSMLNode
 
 SSML = Union[str, AbstractSSMLNode]
 

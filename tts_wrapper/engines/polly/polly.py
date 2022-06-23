@@ -1,5 +1,5 @@
 import wave
-from typing import Optional
+from typing import Optional, Tuple
 
 from tts_wrapper.ssml import AbstractSSMLNode, SSMLNode
 
@@ -11,12 +11,15 @@ except ImportError:
 from ...exceptions import ModuleNotInstalled
 from ...tts import SSML, AbstractTTS
 
-Credentials = tuple[str, str, str]
+Credentials = Tuple[str, str, str]
 
 
 class PollyTTS(AbstractTTS):
     def __init__(
-        self, credentials: Optional[Credentials] = None, voice=None, lang=None
+        self,
+        credentials: Optional[Credentials] = None,
+        voice: Optional[str] = None,
+        lang: Optional[str] = None,
     ) -> None:
         if boto3 is None:
             raise ModuleNotInstalled("boto3")

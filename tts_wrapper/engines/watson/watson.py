@@ -4,7 +4,7 @@ from ...tts import BaseTTS
 try:
     from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
     from ibm_watson import TextToSpeechV1
-except:
+except ImportError:
     IAMAuthenticator = None
     TextToSpeechV1 = None
 

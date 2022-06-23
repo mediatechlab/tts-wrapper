@@ -1,3 +1,5 @@
+from typing import Optional
+
 from ...exceptions import ModuleNotInstalled
 from ...ssml import AbstractSSMLNode, SSMLNode
 from ...tts import BaseTTS
@@ -5,7 +7,7 @@ from ...tts import BaseTTS
 try:
     import requests
 except ImportError:
-    requests = None
+    requests = None  # type: ignore
 
 
 class MicrosoftTTS(BaseTTS):
@@ -18,7 +20,7 @@ class MicrosoftTTS(BaseTTS):
         super().__init__(voice_name=voice_name or "en-US-JessaNeural", lang=lang)
         self.region = region or "eastus"
         self.credentials = credentials
-        self.access_token = None
+        self.access_token: Optional[str] = None
         self.sess = requests.Session()
         self.sess.verify = verify_ssl
 
@@ -36,8 +38,7 @@ class MicrosoftTTS(BaseTTS):
         self.credentials = credentials
 
     def synth(self, ssml: str, filename: str) -> None:
-        if not self.access_token:
-            self.access_token = self._fetch_access_token()
+        self.access_token = self.access_token or self._fetch_access_token()
 
         headers = {
             "Authorization": "Bearer " + self.access_token,
@@ -59,7 +60,7 @@ class MicrosoftTTS(BaseTTS):
         with open(filename, "wb") as wav:
             wav.write(response.content)
 
-    def _fetch_access_token(self):
+    def _fetch_access_token(self) -> str:
         fetch_token_url = (
             f"https://{self.region}.api.cognitive.microsoft.com/sts/v1.0/issueToken"
         )

@@ -5,8 +5,8 @@ try:
     from google.cloud import texttospeech
     from google.oauth2 import service_account
 except ImportError:
-    texttospeech = None
-    service_account = None
+    texttospeech = None  # type: ignore
+    service_account = None  # type: ignore
 
 
 class GoogleTTS(BaseTTS):

@@ -3,7 +3,7 @@ import wave
 try:
     import boto3
 except ImportError:
-    boto3 = None
+    boto3 = None  # type: ignore
 
 from ...exceptions import ModuleNotInstalled
 from ...tts import BaseTTS
@@ -39,5 +39,5 @@ class PollyTTS(BaseTTS):
         )
 
         with wave.open(filename, "wb") as wav:
-            wav.setparams((1, 2, 16000, 0, "NONE", "NONE"))
+            wav.setparams((1, 2, 16000, 0, "NONE", "NONE"))  # type: ignore
             wav.writeframes(resp["AudioStream"].read())

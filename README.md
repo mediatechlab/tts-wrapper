@@ -56,11 +56,11 @@ You can also use [SSML](https://en.wikipedia.org/wiki/Speech_Synthesis_Markup_La
 tts.synth('<speak>Hello, <break time="3s"/> world!</speak>', 'hello.wav')
 ```
 
-As a convenience you can use the `create_ssml_root` function that will create the correct boilerplate tags for each engine:
+As a convenience you can use the `wrap_ssml` function that will create the correct boilerplate tags for each engine:
 
 ```Python
 tts = PollyTTS()
-tts.synth(tts.create_ssml_root().add('Hello, <break time="3s"/> world!'), 'hello.wav')
+tts.synth(tts.wrap_ssml('Hello, <break time="3s"/> world!'), 'hello.wav')
 ```
 
 Learn which tags are available for each service: [Polly](https://docs.aws.amazon.com/polly/latest/dg/supportedtags.html), [Google](https://cloud.google.com/text-to-speech/docs/ssml), [Microsoft](https://docs.microsoft.com/en-us/cortana/skills/speech-synthesis-markup-language), and [Watson](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-ssml).

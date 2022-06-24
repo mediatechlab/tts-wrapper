@@ -1,4 +1,4 @@
-.PHONY: api_tests tests publish act-build
+.PHONY: api_tests tests publish act-build cov.xml
 
 tests:
 	poetry run pytest tests/test_ssml.py tests/test_tts.py
@@ -22,3 +22,6 @@ requirements.txt: pyproject.toml
 
 requirements.dev.txt: pyproject.toml requirements.txt
 	poetry export --dev --without-hashes -f requirements.txt -o requirements.dev.txt
+
+cov.xml:
+	poetry run pytest --cov-report xml:cov.xml --cov=tts_wrapper tests/test_tts.py  tests/test_ssml.py

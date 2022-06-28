@@ -1,5 +1,5 @@
 import pathlib
-from setuptools import setup
+from setuptools import setup  # type: ignore
 
 HERE = pathlib.Path(__file__).parent
 

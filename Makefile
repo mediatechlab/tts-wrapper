@@ -1,4 +1,4 @@
-.PHONY: api_tests tests publish act-build cov.xml
+.PHONY: api_tests tests publish act-build cov.xml mypy
 
 tests:
 	poetry run pytest tests/test_ssml.py tests/test_tts.py
@@ -25,3 +25,6 @@ requirements.dev.txt: pyproject.toml requirements.txt
 
 cov.xml:
 	poetry run pytest --cov-report xml:cov.xml --cov=tts_wrapper tests/test_tts.py  tests/test_ssml.py
+
+mypy:
+	poetry run mypy $$(git ls-files '*.py')

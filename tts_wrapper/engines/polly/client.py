@@ -1,3 +1,5 @@
+import wave
+from io import BytesIO
 from typing import Optional, Tuple
 
 from ...exceptions import ModuleNotInstalled
@@ -31,10 +33,17 @@ class PollyClient:
         self.client = boto_session.client("polly")
 
     def synth(self, ssml: str, voice: str) -> bytes:
-        return self.client.synthesize_speech(
+        pcm = self.client.synthesize_speech(
             Engine="neural",
-            OutputFormat="mp3",
+            OutputFormat="pcm",
             VoiceId=voice,
             TextType="ssml",
             Text=ssml,
         )["AudioStream"].read()
+
+        bio = BytesIO()
+        with wave.open(bio, "wb") as wav:
+            wav.setparams((1, 2, 16000, 0, "NONE", "NONE"))  # type: ignore
+            wav.writeframes(pcm)
+
+        return bio.getbuffer()

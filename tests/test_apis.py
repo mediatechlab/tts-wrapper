@@ -27,7 +27,7 @@ CLIENTS = {
 }
 
 
-def test_actual_synth():
+def test_actual_synth(helpers):
     for cls, client in CLIENTS.items():
         tts = cls(client=client)
 
@@ -35,7 +35,6 @@ def test_actual_synth():
         assert not os.path.exists(file_path)
         try:
             tts.synth_to_file(tts.wrap_ssml("Hello, world!"), file_path)
-            assert os.path.exists(file_path)
-            assert os.path.getsize(file_path) > 1024
+            helpers.check_audio_file(file_path)
         finally:
-            os.unlink(file_path)
+            os.remove(file_path)

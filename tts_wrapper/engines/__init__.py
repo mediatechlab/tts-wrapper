@@ -1,6 +1,6 @@
-from .google import GoogleTTS
-from .microsoft import MicrosoftTTS
-from .polly import PollyTTS
-from .watson import WatsonTTS
+from .google import *
+from .microsoft import *
+from .polly import *
+from .watson import *
 
 ENGINES = [GoogleTTS, MicrosoftTTS, PollyTTS, WatsonTTS]

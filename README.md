@@ -35,11 +35,13 @@ pip install TTS-Wrapper[google, watson]
 Simply instantiate an object from the desired service and call `synth()`.
 
 ```Python
-from tts_wrapper import PollyTTS
+from tts_wrapper import PollyTTS, PollyClient
 
-tts = PollyTTS()
+tts = PollyTTS(client=PollyClient())
 tts.synth('<speak>Hello, world!</speak>', 'hello.wav')
 ```
+
+Notice that you must create a client object to work with your service. Each service uses different authorization techniques. Check out [the documentation](#authorization) to learn more.
 
 ### Selecting a Voice
 
@@ -67,17 +69,17 @@ tts.synth(tts.wrap_ssml('Hello, <break time="3s"/> world!'), 'hello.wav')
 
 Learn which tags are available for each service: [Polly](https://docs.aws.amazon.com/polly/latest/dg/supportedtags.html), [Google](https://cloud.google.com/text-to-speech/docs/ssml), [Microsoft](https://docs.microsoft.com/en-us/cortana/skills/speech-synthesis-markup-language), and [Watson](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-ssml).
 
-### Credentials
+### Authorization
 
-To setup credentials to access each engine, use the `credentials` argument.
+To setup credentials to access each engine, create the respective client.
 
 #### Polly
 
 If you don't explicitly define credentials, `boto3` will try to find them in your system's credentials file or your environment variables. However, you can specify them with a tuple:
 
 ```Python
-from tts_wrapper import PollyTTS
-tts = PollyTTS(credentials=(region, aws_key_id, aws_access_key))
+from tts_wrapper import PollyClient
+client = PollyClient(credentials=(region, aws_key_id, aws_access_key))
 ```
 
 #### Google
@@ -85,8 +87,8 @@ tts = PollyTTS(credentials=(region, aws_key_id, aws_access_key))
 Point to your [Oauth 2.0 credentials file](https://developers.google.com/identity/protocols/OAuth2) path:
 
 ```Python
-from tts_wrapper import GoogleTTS
-tts = GoogleTTS(credentials='path/to/creds.json')
+from tts_wrapper import GoogleClient
+client = GoogleClient(credentials='path/to/creds.json')
 ```
 
 #### Microsoft
@@ -94,14 +96,14 @@ tts = GoogleTTS(credentials='path/to/creds.json')
 Just provide your [subscription key](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech#authentication), like so:
 
 ```Python
-from tts_wrapper import MicrosoftTTS
-tts = MicrosoftTTS(credentials='TOKEN')
+from tts_wrapper import MicrosoftClient
+client = MicrosoftClient(credentials='TOKEN')
 ```
 
 If your region is not the default "useast", you can change it like so:
 
 ```Python
-tts = MicrosoftTTS(credentials='TOKEN', region='brazilsouth')
+client = MicrosoftClient(credentials='TOKEN', region='brazilsouth')
 ```
 
 #### Watson
@@ -109,8 +111,8 @@ tts = MicrosoftTTS(credentials='TOKEN', region='brazilsouth')
 Pass your [API key and URL](https://cloud.ibm.com/apidocs/text-to-speech/text-to-speech#authentication) to the initializer:
 
 ```Python
-from tts_wrapper import WatsonTTS
-tts = WatsonTTS(credentials=('API_KEY', 'API_URL'))
+from tts_wrapper import WatsonClient
+client = WatsonClient(credentials=('API_KEY', 'API_URL'))
 ```
 
 ## License

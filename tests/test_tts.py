@@ -1,5 +1,4 @@
 import os
-import pickle
 import shutil
 import pytest
 from unittest.mock import MagicMock
@@ -11,11 +10,6 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 TMP_DIR = "/tmp/tts-wrapper"
 TMP_SPEECH = os.path.join(TMP_DIR, "speech.wav")
 TEST_DATA_DIR = os.path.join(SCRIPT_DIR, "data")
-
-
-def load_pickle(path):
-    with open(path, "rb") as f:
-        return pickle.load(f)
 
 
 def load_resp_wav():
@@ -30,52 +24,31 @@ def check_audio_file(path):
 
 @pytest.fixture
 def patched_polly():
-    tts = PollyTTS(credentials=("region", "API_KEY", "API_SECRET"))
-    tts.client = MagicMock()
-    synth_resp = tts.client.synthesize_speech.return_value
-    synth_resp["AudioStream"] = MagicMock()
-    synth_resp["AudioStream"].read.return_value = load_pickle(
-        os.path.join(TEST_DATA_DIR, "polly.pickle")
-    )
+    client = MagicMock()
+    tts = PollyTTS(client)
+    client.synth.return_value = load_resp_wav()
     return tts
 
 
 @pytest.fixture
 def patched_ms():
-    resp = load_resp_wav()
-    tts = MicrosoftTTS(credentials="KEY")
-    tts.sess = MagicMock()
-    tts.sess.post.return_value = MagicMock()
-    tts.sess.post.return_value.status_code = 200
-    tts.sess.post.return_value.content = resp
-
-    tts._fetch_access_token = MagicMock()
-    tts._fetch_access_token.return_value = "mocked-access-token"
-    return tts
+    client = MagicMock()
+    client.synth.return_value = load_resp_wav()
+    return MicrosoftTTS(client=client)
 
 
 @pytest.fixture
-def patched_google(mocker):
-    mocked_client = MagicMock()
-    mocked_client.return_value.synthesize_speech.return_value.audio_content = (
-        load_resp_wav()
-    )
-
-    class MockedGoogleTTS(GoogleTTS):
-        def _setup_client(self, credentials):
-            return mocked_client()
-
-    tts = MockedGoogleTTS(credentials="PATH")
-    return tts
+def patched_google():
+    client = MagicMock()
+    client.synth.return_value = load_resp_wav()
+    return GoogleTTS(client=client)
 
 
 @pytest.fixture
 def patched_watson():
-    resp = load_resp_wav()
-    tts = WatsonTTS(credentials=("key", "url"))
-    tts.client = MagicMock()
-    tts.client.synthesize.return_value.get_result.return_value.content = resp
-    return tts
+    client = MagicMock()
+    client.synth.return_value = load_resp_wav()
+    return WatsonTTS(client=client)
 
 
 @pytest.fixture
@@ -94,7 +67,7 @@ def test_string_synth(all_patched_tts):
 
     for tts in all_patched_tts:
         assert not os.path.exists(filename)
-        tts.synth("hello world", filename)
+        tts.synth_to_file("hello world", filename)
         check_audio_file(filename)
         os.remove(filename)
 
@@ -104,7 +77,7 @@ def test_ssml_synth(all_patched_tts):
 
     for tts in all_patched_tts:
         assert not os.path.exists(filename)
-        tts.synth(tts.wrap_ssml("hello world"), filename)
+        tts.synth_to_file(tts.wrap_ssml("hello world"), filename)
         check_audio_file(filename)
         os.remove(filename)
 
@@ -114,10 +87,10 @@ def test_repeated_synth(all_patched_tts):
 
     for tts in all_patched_tts:
         assert not os.path.exists(filename)
-        tts.synth("hello world", filename)
+        tts.synth_to_file("hello world", filename)
         check_audio_file(filename)
         os.remove(filename)
 
-        tts.synth("bye world", filename)
+        tts.synth_to_file("bye world", filename)
         check_audio_file(filename)
         os.remove(filename)

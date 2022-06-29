@@ -12,6 +12,11 @@ except ImportError:
 
 Credentials = Tuple[str, str, str]
 
+FORMATS = {
+    "wav": "pcm",
+    "mp3": "mp3",
+}
+
 
 class PollyClient:
     def __init__(
@@ -32,18 +37,20 @@ class PollyClient:
             )
         self.client = boto_session.client("polly")
 
-    def synth(self, ssml: str, voice: str) -> bytes:
-        pcm = self.client.synthesize_speech(
+    def synth(self, ssml: str, voice: str, format: str) -> bytes:
+        raw = self.client.synthesize_speech(
             Engine="neural",
-            OutputFormat="pcm",
+            OutputFormat=FORMATS[format],
             VoiceId=voice,
             TextType="ssml",
             Text=ssml,
         )["AudioStream"].read()
 
-        bio = BytesIO()
-        with wave.open(bio, "wb") as wav:
-            wav.setparams((1, 2, 16000, 0, "NONE", "NONE"))  # type: ignore
-            wav.writeframes(pcm)
-
-        return bio.getbuffer()
+        if format == "wav":
+            bio = BytesIO()
+            with wave.open(bio, "wb") as wav:
+                wav.setparams((1, 2, 16000, 0, "NONE", "NONE"))  # type: ignore
+                wav.writeframes(raw)
+            return bio.getbuffer()
+        else:
+            return raw

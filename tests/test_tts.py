@@ -1,21 +1,11 @@
 import os
-import shutil
 
 import pytest
 from tts_wrapper.exceptions import UnsupportedFileFormat
 
-TMP_DIR = "/tmp/tts-wrapper"
-TMP_SPEECH = os.path.join(TMP_DIR, "speech.wav")
-
-
-def setup_module():
-    if os.path.exists(TMP_DIR):
-        shutil.rmtree(TMP_DIR)
-    os.makedirs(TMP_DIR)
-
 
 def test_string_synth(all_patched_tts, helpers):
-    filename = TMP_SPEECH
+    filename = helpers.create_tmp_filename("speech.wav")
 
     for tts in all_patched_tts:
         assert not os.path.exists(filename)
@@ -25,7 +15,7 @@ def test_string_synth(all_patched_tts, helpers):
 
 
 def test_ssml_synth(all_patched_tts, helpers):
-    filename = TMP_SPEECH
+    filename = helpers.create_tmp_filename("speech.wav")
 
     for tts in all_patched_tts:
         assert not os.path.exists(filename)
@@ -35,7 +25,7 @@ def test_ssml_synth(all_patched_tts, helpers):
 
 
 def test_repeated_synth(all_patched_tts, helpers):
-    filename = TMP_SPEECH
+    filename = helpers.create_tmp_filename("speech.wav")
 
     for tts in all_patched_tts:
         assert not os.path.exists(filename)

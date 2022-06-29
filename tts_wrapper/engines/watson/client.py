@@ -11,6 +11,8 @@ except ImportError:
 
 Credentials = Tuple[str, str]
 
+FORMATS = {"wav": "audio/wav", "mp3": "audio/mp3"}
+
 
 class WatsonClient:
     def __init__(self, credentials: Credentials) -> None:
@@ -22,9 +24,9 @@ class WatsonClient:
         client.set_service_url(api_url)
         self.client = client
 
-    def synth(self, ssml: str, voice: str) -> bytes:
+    def synth(self, ssml: str, voice: str, format: str) -> bytes:
         return (
-            self.client.synthesize(text=str(ssml), voice=voice, accept="audio/wav")
+            self.client.synthesize(text=str(ssml), voice=voice, accept=FORMATS[format])
             .get_result()
             .content
         )

@@ -3,9 +3,15 @@ from ...exceptions import ModuleNotInstalled
 try:
     from google.cloud import texttospeech
     from google.oauth2 import service_account  # type: ignore
+
+    FORMATS = {
+        "wav": texttospeech.AudioEncoding.LINEAR16,
+        "mp3": texttospeech.AudioEncoding.MP3,
+    }
 except ImportError:
     texttospeech = None  # type: ignore
     service_account = None  # type: ignore
+    FORMATS = {}
 
 
 class GoogleClient:
@@ -19,12 +25,10 @@ class GoogleClient:
             )
         )
 
-    def synth(self, ssml: str, voice: str, lang: str, audio_config=None) -> bytes:
+    def synth(self, ssml: str, voice: str, lang: str, format: str) -> bytes:
         s_input = texttospeech.SynthesisInput(ssml=ssml)
         voice = texttospeech.VoiceSelectionParams(language_code=lang, name=voice)
-        audio_config = audio_config or texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.LINEAR16
-        )
+        audio_config = texttospeech.AudioConfig(audio_encoding=FORMATS[format])
 
         resp = self.client.synthesize_speech(
             input=s_input, voice=voice, audio_config=audio_config

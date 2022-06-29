@@ -4,7 +4,7 @@ from typing import Literal, Optional, Union
 from . import AbstractSSMLNode
 
 SSML = Union[str, AbstractSSMLNode]
-FileFormat = Literal["wav"]
+FileFormat = Union[Literal["wav"], Literal["mp3"]]
 
 
 class AbstractTTS(ABC):

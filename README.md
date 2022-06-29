@@ -115,6 +115,14 @@ from tts_wrapper import WatsonClient
 client = WatsonClient(credentials=('API_KEY', 'API_URL'))
 ```
 
+## File Format
+
+By default, all audio will be a wave file but you can change it to a mp3 using the `format` option:
+
+```Python
+tts.synth('<speak>Hello, world!</speak>', 'hello.mp3', format='mp3)
+```
+
 ## License
 
 Licensed under the [MIT License](./LICENSE).

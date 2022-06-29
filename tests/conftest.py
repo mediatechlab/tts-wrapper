@@ -1,12 +1,13 @@
 import os
 from unittest.mock import MagicMock
 
+import filetype  # type: ignore
 import pytest
 from tts_wrapper.engines import ENGINES
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
-
 TEST_DATA_DIR = os.path.join(SCRIPT_DIR, "data")
+TMP_DIR = "/tmp/tts-wrapper"
 
 
 def load_resp_wav():
@@ -16,9 +17,16 @@ def load_resp_wav():
 
 class Helpers:
     @staticmethod
-    def check_audio_file(path):
+    def check_audio_file(path, format="wav"):
         assert os.path.exists(path), f"{path} does not exists"
         assert os.path.getsize(path) > 1024
+        assert filetype.guess_extension(path) == format
+
+    @staticmethod
+    def create_tmp_filename(filename):
+        if not os.path.exists(TMP_DIR):
+            os.makedirs(TMP_DIR)
+        return os.path.join(TMP_DIR, filename)
 
 
 @pytest.fixture(scope="session")

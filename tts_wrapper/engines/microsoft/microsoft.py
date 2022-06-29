@@ -19,9 +19,9 @@ class MicrosoftTTS(AbstractTTS):
         self.voice = voice or "en-US-JessaNeural"
 
     def synth_to_bytes(self, ssml: SSML, format: FileFormat) -> bytes:
-        if format != "wav":
+        if format not in ("wav", "mp3"):
             raise UnsupportedFileFormat(format, self.__class__.__name__)
-        return self.client.synth(str(ssml))
+        return self.client.synth(str(ssml), format)
 
     def wrap_ssml(self, ssml: AbstractSSMLNode) -> AbstractSSMLNode:
         return SSMLNode.speak(

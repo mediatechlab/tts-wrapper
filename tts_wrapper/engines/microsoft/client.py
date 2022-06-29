@@ -9,6 +9,11 @@ try:
 except ImportError:
     requests = None  # type: ignore
 
+FORMATS = {
+    "wav": "riff-24khz-16bit-mono-pcm",
+    "mp3": "audio-24khz-160kbitrate-mono-mp3",
+}
+
 
 class MicrosoftClient:
     def __init__(
@@ -18,9 +23,11 @@ class MicrosoftClient:
             raise ModuleNotInstalled("requests")
 
         self.credentials = credentials
+        self.region = region or "eastus"
+
         self.session = requests.Session()
         self.session.verify = verify_ssl
-        self.region = region or "eastus"
+        self.session.headers["Content-Type"] = "application/ssml+xml"
 
     def _fetch_access_token(self) -> str:
         fetch_token_url = (
@@ -30,16 +37,12 @@ class MicrosoftClient:
         response = requests.post(fetch_token_url, headers=headers)
         return str(response.text)
 
-    def synth(self, ssml: str) -> bytes:
+    def synth(self, ssml: str, format: str) -> bytes:
+        self.session.headers["X-Microsoft-OutputFormat"] = FORMATS[format]
+
         if "Authorization" not in self.session.headers:
             access_token = self._fetch_access_token()
-            self.session.headers.update(
-                {
-                    "Authorization": "Bearer " + access_token,
-                    "Content-Type": "application/ssml+xml",
-                    "X-Microsoft-OutputFormat": "riff-24khz-16bit-mono-pcm",
-                }
-            )
+            self.session.headers["Authorization"] = "Bearer " + access_token
 
         response = self.session.post(
             f"https://{self.region}.tts.speech.microsoft.com/cognitiveservices/v1",

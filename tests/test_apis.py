@@ -1,6 +1,5 @@
 import os
 
-import filetype  # type: ignore
 from tts_wrapper import (
     GoogleClient,
     GoogleTTS,
@@ -31,15 +30,19 @@ CLIENTS = {
 def test_actual_synth(helpers):
     for cls, client in CLIENTS.items():
         tts = cls(client=client)
+        print("Using", cls)
 
-        file_path = "/tmp/audio.wav"
-        assert not os.path.exists(file_path)
-        try:
-            tts.synth_to_file(tts.wrap_ssml("Hello, world!"), file_path)
-            helpers.check_audio_file(file_path)
-            assert filetype.guess_extension(file_path) == "wav"
-        except:
-            print("Exception with class", cls)
-            raise
-        finally:
-            os.remove(file_path)
+        for format in ("wav", "mp3"):
+            print("Testing format", format)
+            file_path = helpers.create_tmp_filename(f"audio.{format}")
+            assert not os.path.exists(file_path)
+            try:
+                tts.synth_to_file(
+                    tts.wrap_ssml("Hello, world!"), file_path, format=format
+                )
+                helpers.check_audio_file(file_path, format=format)
+            except:
+                print(f"Exception with class '{cls}' and format '{format}'.")
+                raise
+            finally:
+                os.remove(file_path)

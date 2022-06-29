@@ -29,6 +29,10 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Check with mypy
         run: mypy $(git ls-files '*.py')
+      - name: Install PicoTTS
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libttspico-utils
       - name: Test with pytest
         env:
           POLLY_REGION: ${{ secrets.POLLY_REGION }}

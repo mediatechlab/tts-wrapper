@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Literal, Optional, Union
+from typing import List, Literal, Optional, Union
 
 from . import AbstractSSMLNode
 
@@ -8,6 +8,11 @@ FileFormat = Union[Literal["wav"], Literal["mp3"]]
 
 
 class AbstractTTS(ABC):
+    @classmethod
+    @abstractmethod
+    def supported_formats(cls) -> List[FileFormat]:
+        pass
+
     @abstractmethod
     def synth_to_bytes(self, ssml: SSML, format: FileFormat) -> bytes:
         pass

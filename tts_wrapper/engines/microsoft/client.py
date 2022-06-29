@@ -1,6 +1,7 @@
-from typing import Optional
+from typing import List, Optional
 
 import requests
+from tts_wrapper.tts import FileFormat
 
 from ...exceptions import ModuleNotInstalled
 
@@ -16,6 +17,11 @@ FORMATS = {
 
 
 class MicrosoftClient:
+    @property
+    @classmethod
+    def supported_formats(cls) -> List[FileFormat]:
+        return ["wav", "mp3"]
+
     def __init__(
         self, credentials: str, region: Optional[str] = None, verify_ssl=True
     ) -> None:
@@ -37,7 +43,7 @@ class MicrosoftClient:
         response = requests.post(fetch_token_url, headers=headers)
         return str(response.text)
 
-    def synth(self, ssml: str, format: str) -> bytes:
+    def synth(self, ssml: str, format: FileFormat) -> bytes:
         self.session.headers["X-Microsoft-OutputFormat"] = FORMATS[format]
 
         if "Authorization" not in self.session.headers:

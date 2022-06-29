@@ -1,6 +1,6 @@
-import wave
-from io import BytesIO
 from typing import Optional, Tuple
+
+from tts_wrapper.engines.utils import process_wav
 
 from ...exceptions import ModuleNotInstalled
 
@@ -47,10 +47,6 @@ class PollyClient:
         )["AudioStream"].read()
 
         if format == "wav":
-            bio = BytesIO()
-            with wave.open(bio, "wb") as wav:
-                wav.setparams((1, 2, 16000, 0, "NONE", "NONE"))  # type: ignore
-                wav.writeframes(raw)
-            return bio.getbuffer()
+            return process_wav(raw)
         else:
             return raw

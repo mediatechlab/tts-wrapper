@@ -9,6 +9,8 @@ from tts_wrapper import (
     PollyTTS,
     WatsonClient,
     WatsonTTS,
+    PicoClient,
+    PicoTTS,
 )
 
 POLLY_REGION = os.environ["POLLY_REGION"]
@@ -24,6 +26,7 @@ CLIENTS = {
     MicrosoftTTS: MicrosoftClient(MICROSOFT_KEY),
     GoogleTTS: GoogleClient(GOOGLE_SA_PATH),
     WatsonTTS: WatsonClient((WATSON_API_KEY, WATSON_API_URL)),
+    PicoTTS: PicoClient(),
 }
 
 
@@ -32,7 +35,7 @@ def test_actual_synth(helpers):
         tts = cls(client=client)
         print("Using", cls)
 
-        for format in ("wav", "mp3"):
+        for format in cls.supported_formats():
             print("Testing format", format)
             file_path = helpers.create_tmp_filename(f"audio.{format}")
             assert not os.path.exists(file_path)

@@ -13,6 +13,7 @@ Currently the following services are supported:
 - Google TTS
 - Microsoft TTS
 - IBM Watson
+- PicoTTS
 
 ## Installation
 
@@ -29,6 +30,8 @@ Example: to use `google` and `watson`:
 ```sh
 pip install TTS-Wrapper[google, watson]
 ```
+
+For PicoTTS you need to install the package on your machine. For Debian (Ubuntu and others) install the package `libttspico-utils` and for Arch (Manjaro and others) there is a package called `aur/pico-tts`.
 
 ## Usage
 
@@ -113,6 +116,15 @@ Pass your [API key and URL](https://cloud.ibm.com/apidocs/text-to-speech/text-to
 ```Python
 from tts_wrapper import WatsonClient
 client = WatsonClient(credentials=('API_KEY', 'API_URL'))
+```
+
+### PicoTTS
+
+This client doesn't require authorization since it is offline.
+
+```Python
+from tts_wrapper import PicoClient
+client = PicoClient()
 ```
 
 ## File Format

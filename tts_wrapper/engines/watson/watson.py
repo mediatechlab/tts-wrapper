@@ -1,10 +1,8 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
-from tts_wrapper.exceptions import UnsupportedFileFormat
-from tts_wrapper.ssml import AbstractSSMLNode, SSMLNode
-
-from ...tts import SSML, AbstractTTS, FileFormat
-from . import WatsonClient
+from ...exceptions import UnsupportedFileFormat
+from ...tts import AbstractTTS, FileFormat
+from . import WatsonClient, WatsonSSML
 
 
 class WatsonTTS(AbstractTTS):
@@ -20,10 +18,11 @@ class WatsonTTS(AbstractTTS):
         self.client = client
         self.voice = voice or "en-US_LisaV3Voice"
 
-    def synth_to_bytes(self, ssml: SSML, format: FileFormat) -> bytes:
+    def synth_to_bytes(self, text: Any, format: FileFormat) -> bytes:
         if format not in self.supported_formats():
             raise UnsupportedFileFormat(format, self.__class__.__name__)
-        return self.client.synth(str(ssml), voice=self.voice, format=format)
+        return self.client.synth(str(text), self.voice, format)
 
-    def wrap_ssml(self, ssml: AbstractSSMLNode) -> AbstractSSMLNode:
-        return SSMLNode.speak().add(ssml)
+    @property
+    def ssml(self) -> WatsonSSML:
+        return WatsonSSML()

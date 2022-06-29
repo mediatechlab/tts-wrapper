@@ -40,9 +40,10 @@ def test_actual_synth(helpers):
             file_path = helpers.create_tmp_filename(f"audio.{format}")
             assert not os.path.exists(file_path)
             try:
-                tts.synth_to_file(
-                    tts.wrap_ssml("Hello, world!"), file_path, format=format
-                )
+                text = "Hello, world!"
+                if hasattr(tts, "ssml"):
+                    text = tts.ssml.add(text)
+                tts.synth_to_file(text, file_path, format=format)
                 helpers.check_audio_file(file_path, format=format)
             except:
                 print(f"Exception with class '{cls}' and format '{format}'.")

@@ -1,10 +1,8 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
-from tts_wrapper.exceptions import UnsupportedFileFormat
-
-from ...ssml import AbstractSSMLNode, SSMLNode
-from ...tts import SSML, AbstractTTS, FileFormat
-from . import MicrosoftClient
+from ...exceptions import UnsupportedFileFormat
+from ...tts import AbstractTTS, FileFormat
+from . import MicrosoftClient, MicrosoftSSML
 
 
 class MicrosoftTTS(AbstractTTS):
@@ -22,17 +20,11 @@ class MicrosoftTTS(AbstractTTS):
         self.lang = lang or "en-US"
         self.voice = voice or "en-US-JessaNeural"
 
-    def synth_to_bytes(self, ssml: SSML, format: FileFormat) -> bytes:
+    def synth_to_bytes(self, text: Any, format: FileFormat) -> bytes:
         if format not in self.supported_formats():
             raise UnsupportedFileFormat(format, self.__class__.__name__)
-        return self.client.synth(str(ssml), format)
+        return self.client.synth(str(text), format)
 
-    def wrap_ssml(self, ssml: AbstractSSMLNode) -> AbstractSSMLNode:
-        return SSMLNode.speak(
-            {
-                "version": "1.0",
-                "xml:lang": self.lang,
-                "xmlns": "https://www.w3.org/2001/10/synthesis",
-                "xmlns:mstts": "https://www.w3.org/2001/mstts",
-            }
-        ).add(SSMLNode.voice({"name": self.voice}).add(ssml))
+    @property
+    def ssml(self) -> MicrosoftSSML:
+        return MicrosoftSSML(self.lang, self.voice)

@@ -58,16 +58,16 @@ Check out the list of available voices for [Polly](https://docs.aws.amazon.com/p
 
 ### SSML
 
-You can also use [SSML](https://en.wikipedia.org/wiki/Speech_Synthesis_Markup_Language) markup to control the output.
+You can also use [SSML](https://en.wikipedia.org/wiki/Speech_Synthesis_Markup_Language) markup to control the output of compatible engines.
 
 ```Python
 tts.synth('<speak>Hello, <break time="3s"/> world!</speak>', 'hello.wav')
 ```
 
-As a convenience you can use the `wrap_ssml` function that will create the correct boilerplate tags for each engine:
+It is recommended to use the `ssml` attribute that will create the correct boilerplate tags for each engine:
 
 ```Python
-tts.synth(tts.wrap_ssml('Hello, <break time="3s"/> world!'), 'hello.wav')
+tts.synth(tts.ssml.add('Hello, <break time="3s"/> world!'), 'hello.wav')
 ```
 
 Learn which tags are available for each service: [Polly](https://docs.aws.amazon.com/polly/latest/dg/supportedtags.html), [Google](https://cloud.google.com/text-to-speech/docs/ssml), [Microsoft](https://docs.microsoft.com/en-us/cortana/skills/speech-synthesis-markup-language), and [Watson](https://cloud.ibm.com/docs/text-to-speech?topic=text-to-speech-ssml).

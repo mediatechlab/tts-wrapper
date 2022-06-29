@@ -25,3 +25,11 @@ def test_add_text():
         str(SSMLNode("speak").add(SSMLNode("a").add("hello")))
         == "<speak><a>hello</a></speak>"
     )
+
+
+def test_render_multiple_children():
+    children = ["Hello, ", SSMLNode("break", attrs={"time": "3s"}), " World!"]
+    assert (
+        str(SSMLNode("speak", children=children))
+        == '<speak>Hello, <break time="3s"></break> World!</speak>'
+    )

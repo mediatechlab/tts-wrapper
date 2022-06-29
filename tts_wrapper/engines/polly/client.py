@@ -1,7 +1,6 @@
 from typing import Optional, Tuple
 
-from tts_wrapper.engines.utils import process_wav
-
+from ...engines.utils import process_wav
 from ...exceptions import ModuleNotInstalled
 
 try:

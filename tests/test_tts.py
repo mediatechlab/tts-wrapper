@@ -19,7 +19,8 @@ def test_ssml_synth(all_patched_tts, helpers):
 
     for tts in all_patched_tts:
         assert not os.path.exists(filename)
-        tts.synth_to_file(tts.wrap_ssml("hello world"), filename)
+        text = tts.ssml.add("hello world") if hasattr(tts, "ssml") else "hello world"
+        tts.synth_to_file(text, filename)
         helpers.check_audio_file(filename)
         os.remove(filename)
 

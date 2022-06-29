@@ -1,9 +1,7 @@
-from typing import List, Optional
+from typing import Any, List, Optional
 
-from tts_wrapper.exceptions import UnsupportedFileFormat
-from tts_wrapper.ssml import AbstractSSMLNode
-
-from ...tts import SSML, AbstractTTS, FileFormat
+from ...exceptions import UnsupportedFileFormat
+from ...tts import AbstractTTS, FileFormat
 from . import PicoClient
 
 
@@ -16,11 +14,7 @@ class PicoTTS(AbstractTTS):
         self.client = client
         self.voice = voice or "en-US"
 
-    def synth_to_bytes(self, ssml: SSML, format: FileFormat) -> bytes:
+    def synth_to_bytes(self, text: Any, format: FileFormat) -> bytes:
         if format not in self.supported_formats():
             raise UnsupportedFileFormat(format, self.__class__.__name__)
-
-        return self.client.synth(str(ssml), self.voice)
-
-    def wrap_ssml(self, ssml: AbstractSSMLNode) -> AbstractSSMLNode:
-        return ssml
+        return self.client.synth(str(text), self.voice)

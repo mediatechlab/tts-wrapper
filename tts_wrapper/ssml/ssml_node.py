@@ -34,11 +34,3 @@ class SSMLNode(AbstractSSMLNode):
     def add(self, child: Child) -> "SSMLNode":
         self.children.append(child)
         return self
-
-    @classmethod
-    def speak(cls, attrs: Optional[Attr] = None) -> "SSMLNode":
-        return cls("speak", attrs)
-
-    @classmethod
-    def voice(cls, attrs: Optional[Attr] = None) -> "SSMLNode":
-        return cls("voice", attrs)

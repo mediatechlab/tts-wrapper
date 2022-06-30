@@ -137,10 +137,18 @@ Offline:
 make tests
 ```
 
-Online:
+Both:
 
 ```bash
-make api_tests
+make all_tests
+```
+
+You don't actually need to run tests for all services if you don't want to. Since they are divided by folder, you can tell `pytest` to run all tests from a single engine:
+
+```Python
+source .secrets/.env && \
+  export POLLY_REGION POLLY_AWS_ID POLLY_AWS_KEY && \
+  pytest tests/engines/test_polly.py
 ```
 
 <!-- omit in toc -->

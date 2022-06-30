@@ -1,13 +1,12 @@
 import os
+from typing import Callable
 from unittest.mock import MagicMock
 
 import filetype  # type: ignore
 import pytest
-from tts_wrapper.engines import ENGINES
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 TEST_DATA_DIR = os.path.join(SCRIPT_DIR, "data")
-TMP_DIR = "/tmp/tts-wrapper"
 
 
 def load_resp_wav():
@@ -23,10 +22,10 @@ class Helpers:
         assert filetype.guess_extension(path) == format
 
     @staticmethod
-    def create_tmp_filename(filename):
-        if not os.path.exists(TMP_DIR):
-            os.makedirs(TMP_DIR)
-        return os.path.join(TMP_DIR, filename)
+    def create_tmp_filename(tmp_dir, filename):
+        if not os.path.exists(tmp_dir):
+            os.makedirs(tmp_dir)
+        return os.path.join(tmp_dir, filename)
 
 
 @pytest.fixture(scope="session")
@@ -41,6 +40,8 @@ def client():
     return client
 
 
-@pytest.fixture(scope="module")
-def all_patched_tts(client):
-    return [engine(client=client) for engine in ENGINES]
+@pytest.fixture()
+def tts(tts_cls, client):
+    if isinstance(client, Callable) and not isinstance(client, MagicMock):
+        client = client()
+    return tts_cls(client=client)

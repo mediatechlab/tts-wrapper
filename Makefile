@@ -1,15 +1,15 @@
 .PHONY: api_tests tests publish act-build cov.xml mypy
 
 tests:
-	poetry run pytest tests/test_ssml.py tests/test_tts.py
+	poetry run pytest -s -m "not slow"
 
-api_tests:
+all_tests:
 	source .secrets/.env && \
 	export POLLY_REGION POLLY_AWS_ID POLLY_AWS_KEY && \
 	export MICROSOFT_KEY && \
 	export GOOGLE_SA_PATH && \
 	export WATSON_API_KEY WATSON_API_URL && \
-	poetry run pytest -s tests/test_apis.py
+	poetry run pytest -s
 
 publish:
 	poetry publish --build
@@ -24,7 +24,7 @@ requirements.dev.txt: pyproject.toml requirements.txt
 	poetry export --dev --without-hashes -f requirements.txt -o requirements.dev.txt
 
 cov.xml:
-	poetry run pytest --cov-report xml:cov.xml --cov=tts_wrapper tests/test_tts.py  tests/test_ssml.py
+	poetry run pytest --cov-report xml:cov.xml --cov=tts_wrapper -m "not slow"
 
 mypy:
 	poetry run mypy $$(git ls-files '*.py')

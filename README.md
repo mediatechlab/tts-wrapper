@@ -5,7 +5,9 @@
 [![codecov](https://codecov.io/gh/mediatechlab/tts-wrapper/branch/master/graph/badge.svg?token=79IG7GAK0B)](https://codecov.io/gh/mediatechlab/tts-wrapper)
 [![Maintainability](https://api.codeclimate.com/v1/badges/b327dda20742c054bcf0/maintainability)](https://codeclimate.com/github/mediatechlab/tts-wrapper/maintainability)
 
-_TTS-Wrapper_ is a hassle-free Python library that allows one to use text-to-speech APIs with the same interface.
+> ## **Contributions are welcome! Check our [contribution guide](./CONTRIBUTING.md).**
+
+_TTS-Wrapper_ makes it easier to use text-to-speech APIs by providing a unified and easy-to-use interface.
 
 Currently the following services are supported:
 

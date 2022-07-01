@@ -19,6 +19,8 @@ act-build:
 
 requirements.txt: pyproject.toml
 	poetry export --without-hashes -E google -E watson -E polly -E microsoft -f requirements.txt -o requirements.txt
+	# it seems like sapi dependencies are not being generated correctly, so we'll manually add them here
+	echo "pyttsx3==2.90" >> requirements.txt
 
 requirements.dev.txt: pyproject.toml requirements.txt
 	poetry export --dev --without-hashes -f requirements.txt -o requirements.dev.txt

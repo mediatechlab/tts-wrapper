@@ -1,7 +1,7 @@
 .PHONY: api_tests tests publish act-build cov.xml mypy
 
 tests:
-	poetry run pytest -s -m "not slow"
+	pytest -s -m "not slow"
 
 all_tests:
 	source .secrets/.env && \
@@ -9,7 +9,7 @@ all_tests:
 	export MICROSOFT_KEY && \
 	export GOOGLE_SA_PATH && \
 	export WATSON_API_KEY WATSON_API_URL && \
-	poetry run pytest -s
+	pytest -s
 
 publish:
 	poetry publish --build

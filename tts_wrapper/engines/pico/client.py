@@ -15,7 +15,9 @@ class PicoClient:
 
     @classmethod
     def _check_bin_exists(cls, bin_name: str) -> bool:
-        proc = subprocess.run(f"command -v {bin_name}", shell=True)
+        proc = subprocess.run(
+            f"command -v {bin_name}", shell=True, stdout=subprocess.DEVNULL
+        )
         return proc.returncode == 0
 
     def _get_bin_name(self) -> Optional[str]:

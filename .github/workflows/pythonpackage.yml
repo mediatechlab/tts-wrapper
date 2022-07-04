@@ -7,9 +7,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.8', '3.9', '3.10']
-
+        include:
+          - {os: ubuntu-latest, python: '3.8'}
+          - {os: ubuntu-latest, python: '3.9'}
+          - {os: ubuntu-latest, python: '3.10'}
+          - {os: windows-latest, python: '3.10'}
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -53,4 +58,5 @@ jobs:
           # run all tests with coverage
           pytest --cov=tts_wrapper
       - name: Upload Coverage to Codecov
+        if: ${{ !env.ACT }}
         uses: codecov/codecov-action@v2

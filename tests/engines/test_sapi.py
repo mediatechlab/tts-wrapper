@@ -1,3 +1,4 @@
+import os
 import sys
 
 import pytest
@@ -17,8 +18,8 @@ class TestSAPIOffline(BaseEngineTest):
 
 @pytest.mark.slow
 @pytest.mark.skipif(
-    not sys.platform.startswith("win"),
-    reason="Skipping SAPI synth because it is windows-only.",
+    not sys.platform.startswith("win") or "CI" in os.environ,
+    reason="Skipping SAPI synth because it is windows-only (can only run on a box).",
 )
 @pytest.mark.parametrize(
     "formats,tts_cls,client",

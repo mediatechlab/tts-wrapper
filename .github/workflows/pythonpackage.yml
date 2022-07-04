@@ -47,7 +47,7 @@ jobs:
           WATSON_API_URL: ${{ secrets.WATSON_API_URL }}
         run: |
           # create intermediary dirs
-          install -D /dev/null $GOOGLE_SA_PATH
+          mkdir -p $(dirname $GOOGLE_SA_PATH)
           # create Google's json file
           echo $GOOGLE_SA_FILE_B64 | base64 --decode > $GOOGLE_SA_PATH
           # run all tests with coverage

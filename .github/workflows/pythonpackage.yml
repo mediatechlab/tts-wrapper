@@ -34,6 +34,8 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y libttspico-utils
+        with:
+          os: ubuntu-latest
       - name: Test with pytest
         env:
           POLLY_REGION: ${{ secrets.POLLY_REGION }}

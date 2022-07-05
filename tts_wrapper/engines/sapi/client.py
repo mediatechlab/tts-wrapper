@@ -1,8 +1,8 @@
-import tempfile
+import pyttsx3  # type: ignore
+import os
 
 from ...exceptions import ModuleNotInstalled
-
-import pyttsx3  # type: ignore
+from ..utils import create_temp_filename
 
 
 class SAPIClient:
@@ -13,8 +13,11 @@ class SAPIClient:
             raise ModuleNotInstalled("sapi")
 
     def synth(self, text: str) -> bytes:
-        with tempfile.NamedTemporaryFile("w+b", suffix=".wav") as temp:
-            self._client.save_to_file(text, temp.name)
-            self._client.runAndWait()
-            temp.seek(0)
-            return temp.read()
+        temp_filename = create_temp_filename(".wav")
+        self._client.save_to_file(text, temp_filename)
+        self._client.runAndWait()
+
+        with open(temp_filename, "rb") as temp_f:
+            content = temp_f.read()
+        os.remove(temp_filename)
+        return content

@@ -16,6 +16,7 @@ Currently the following services are supported:
 - Microsoft TTS
 - IBM Watson
 - PicoTTS
+- SAPI (Microsoft Speech API)
 
 ## Installation
 
@@ -120,13 +121,15 @@ from tts_wrapper import WatsonClient
 client = WatsonClient(credentials=('API_KEY', 'API_URL'))
 ```
 
-### PicoTTS
+#### PicoTTS & SAPI
 
-This client doesn't require authorization since it is offline.
+These clients dont't require authorization since they run offline.
 
 ```Python
-from tts_wrapper import PicoClient
+from tts_wrapper import PicoClient, SAPIClient
 client = PicoClient()
+# or
+client = SAPIClient()
 ```
 
 ## File Format

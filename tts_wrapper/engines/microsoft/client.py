@@ -1,6 +1,5 @@
 from typing import List, Optional
 
-import requests
 from tts_wrapper.tts import FileFormat
 
 from ...exceptions import ModuleNotInstalled

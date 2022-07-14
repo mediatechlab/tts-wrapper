@@ -1,5 +1,9 @@
-import pyttsx3  # type: ignore
 import os
+
+try:
+    import pyttsx3  # type: ignore
+except ImportError:
+    pyttsx3 = None
 
 from ...exceptions import ModuleNotInstalled
 from ..utils import create_temp_filename
@@ -7,6 +11,9 @@ from ..utils import create_temp_filename
 
 class SAPIClient:
     def __init__(self) -> None:
+        if pyttsx3 is None:
+            raise ModuleNotInstalled("pyttsx3")
+
         try:
             self._client = pyttsx3.init("sapi5")
         except ModuleNotFoundError:

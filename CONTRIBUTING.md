@@ -19,6 +19,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
   - [Suggesting Enhancements](#suggesting-enhancements)
   - [Your First Code Contribution](#your-first-code-contribution)
   - [Improving The Documentation](#improving-the-documentation)
+  - [Setup with VS Code and DevContainer](#setup-with-vs-code-and-devcontainer)
 - [Styleguides](#styleguides)
   - [Commit Messages](#commit-messages)
 - [Join The Project Team](#join-the-project-team)
@@ -150,6 +151,15 @@ source .secrets/.env && \
   export POLLY_REGION POLLY_AWS_ID POLLY_AWS_KEY && \
   pytest tests/engines/test_polly.py
 ```
+
+### Setup with VS Code and [DevContainer](https://code.visualstudio.com/docs/remote/containers)
+
+- Clone the repository
+- Install the [Remote Container](https://github.com/microsoft/vscode-dev-containers) extension in Visual Code
+- Click on the ![devcontainer-button](https://user-images.githubusercontent.com/2154092/179066283-efc659da-02ab-4fb5-86ca-763557f56f0d.png) icon in the bottom left corner and select `Reopen in Container` or look for `Reopen in Container` in the command panel (Ctrl+Shift+P)
+- Wait for the containers to build and install all the dependencies using Poetry
+- Open a terminal from VS Code and run `make tests` to check everything went right
+
 
 <!-- omit in toc -->
 ## Attribution

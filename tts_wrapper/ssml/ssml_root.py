@@ -3,12 +3,12 @@ from . import AbstractSSMLNode, Child, SSMLNode
 
 class BaseSSMLRoot(AbstractSSMLNode):
     def __init__(self) -> None:
-        self.inner = SSMLNode("speak")
-        self.root = self.inner
+        self._inner = SSMLNode("speak")
+        self._root = self._inner
 
     def __str__(self) -> str:
-        return str(self.root)
+        return str(self._root)
 
     def add(self, child: Child) -> "AbstractSSMLNode":
-        self.inner.add(child)
+        self._inner.add(child)
         return self

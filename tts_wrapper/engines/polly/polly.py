@@ -16,13 +16,13 @@ class PollyTTS(AbstractTTS):
         client: PollyClient,
         voice: Optional[str] = None,
     ) -> None:
-        self.client = client
-        self.voice = voice or "Joanna"
+        self._client = client
+        self._voice = voice or "Joanna"
 
     def synth_to_bytes(self, text: Any, format: FileFormat) -> bytes:
         if format not in self.supported_formats():
             raise UnsupportedFileFormat(format, self.__class__.__name__)
-        return self.client.synth(str(text), self.voice, format)
+        return self._client.synth(str(text), self._voice, format)
 
     @property
     def ssml(self) -> PollySSML:

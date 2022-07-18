@@ -27,30 +27,30 @@ class MicrosoftClient:
         if requests is None:
             raise ModuleNotInstalled("requests")
 
-        self.credentials = credentials
-        self.region = region or "eastus"
+        self._credentials = credentials
+        self._region = region or "eastus"
 
-        self.session = requests.Session()
-        self.session.verify = verify_ssl
-        self.session.headers["Content-Type"] = "application/ssml+xml"
+        self._session = requests.Session()
+        self._session.verify = verify_ssl
+        self._session.headers["Content-Type"] = "application/ssml+xml"
 
     def _fetch_access_token(self) -> str:
         fetch_token_url = (
-            f"https://{self.region}.api.cognitive.microsoft.com/sts/v1.0/issueToken"
+            f"https://{self._region}.api.cognitive.microsoft.com/sts/v1.0/issueToken"
         )
-        headers = {"Ocp-Apim-Subscription-Key": self.credentials}
+        headers = {"Ocp-Apim-Subscription-Key": self._credentials}
         response = requests.post(fetch_token_url, headers=headers)
         return str(response.text)
 
     def synth(self, ssml: str, format: FileFormat) -> bytes:
-        self.session.headers["X-Microsoft-OutputFormat"] = FORMATS[format]
+        self._session.headers["X-Microsoft-OutputFormat"] = FORMATS[format]
 
-        if "Authorization" not in self.session.headers:
+        if "Authorization" not in self._session.headers:
             access_token = self._fetch_access_token()
-            self.session.headers["Authorization"] = "Bearer " + access_token
+            self._session.headers["Authorization"] = "Bearer " + access_token
 
-        response = self.session.post(
-            f"https://{self.region}.tts.speech.microsoft.com/cognitiveservices/v1",
+        response = self._session.post(
+            f"https://{self._region}.tts.speech.microsoft.com/cognitiveservices/v1",
             data=ssml.encode("utf-8"),
         )
 

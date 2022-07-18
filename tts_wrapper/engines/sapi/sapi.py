@@ -11,9 +11,9 @@ class SAPITTS(AbstractTTS):
         return ["wav"]
 
     def __init__(self, client: SAPIClient) -> None:
-        self.client = client
+        self._client = client
 
     def synth_to_bytes(self, text: Any, format: FileFormat) -> bytes:
         if format not in self.supported_formats():
             raise UnsupportedFileFormat(format, self.__class__.__name__)
-        return self.client.synth(str(text))
+        return self._client.synth(str(text))

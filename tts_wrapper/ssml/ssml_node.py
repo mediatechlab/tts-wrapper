@@ -22,15 +22,15 @@ class SSMLNode(AbstractSSMLNode):
         attrs: Optional[Attr] = None,
         children: Optional[List[Child]] = None,
     ) -> None:
-        self.tag = tag
-        self.attrs = attrs or {}
-        self.children = children or []
+        self._tag = tag
+        self._attrs = attrs or {}
+        self._children = children or []
 
     def __str__(self) -> str:
-        attrs = " ".join(f'{k}="{v}"' for k, v in self.attrs.items())
-        rendered_children = "".join(str(c) for c in self.children)
-        return f"<{self.tag}{(' ' if attrs else '')}{attrs}>{rendered_children}</{self.tag}>"
+        attrs = " ".join(f'{k}="{v}"' for k, v in self._attrs.items())
+        rendered_children = "".join(str(c) for c in self._children)
+        return f"<{self._tag}{(' ' if attrs else '')}{attrs}>{rendered_children}</{self._tag}>"
 
     def add(self, child: Child) -> "SSMLNode":
-        self.children.append(child)
+        self._children.append(child)
         return self

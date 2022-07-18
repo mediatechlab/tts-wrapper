@@ -34,10 +34,10 @@ class PollyClient:
                 aws_secret_access_key=aws_access_key,
                 region_name=region,
             )
-        self.client = boto_session.client("polly")
+        self._client = boto_session.client("polly")
 
     def synth(self, ssml: str, voice: str, format: str) -> bytes:
-        raw = self.client.synthesize_speech(
+        raw = self._client.synthesize_speech(
             Engine="neural",
             OutputFormat=FORMATS[format],
             VoiceId=voice,

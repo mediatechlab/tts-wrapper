@@ -22,11 +22,11 @@ class WatsonClient:
         api_key, api_url = credentials
         client = TextToSpeechV1(authenticator=IAMAuthenticator(api_key))
         client.set_service_url(api_url)
-        self.client = client
+        self._client = client
 
     def synth(self, ssml: str, voice: str, format: str) -> bytes:
         return (
-            self.client.synthesize(text=str(ssml), voice=voice, accept=FORMATS[format])
+            self._client.synthesize(text=str(ssml), voice=voice, accept=FORMATS[format])
             .get_result()
             .content
         )

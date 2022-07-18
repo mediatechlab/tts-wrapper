@@ -11,7 +11,7 @@ class PicoClient:
         bin_name = self._get_bin_name()
         if bin_name is None:
             raise ModuleNotInstalled("pico-tts")
-        self.bin_name = bin_name
+        self._bin_name = bin_name
 
     @classmethod
     def _check_bin_exists(cls, bin_name: str) -> bool:
@@ -28,13 +28,13 @@ class PicoClient:
 
     def _synth_pico2wave(self, text: str, voice: str) -> bytes:
         with tempfile.NamedTemporaryFile("w+b", suffix=".wav") as temp:
-            subprocess.run([self.bin_name, "-l", voice, "-w", temp.name, text])
+            subprocess.run([self._bin_name, "-l", voice, "-w", temp.name, text])
             temp.seek(0)
             return temp.read()
 
     def _synth_picotts(self, text: str, voice: str) -> bytes:
         proc = subprocess.run(
-            [self.bin_name, "-l", voice],
+            [self._bin_name, "-l", voice],
             input=text.encode("utf-8"),
             capture_output=True,
         )
@@ -42,7 +42,7 @@ class PicoClient:
         return process_wav(raw)
 
     def synth(self, text: str, voice: str) -> bytes:
-        if self.bin_name == "pico2wave":
+        if self._bin_name == "pico2wave":
             return self._synth_pico2wave(text, voice)
         else:
             return self._synth_picotts(text, voice)

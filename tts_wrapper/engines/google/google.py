@@ -19,14 +19,14 @@ class GoogleTTS(AbstractTTS):
         """
         @param credentials: The path to the json file that contains the credentials.
         """
-        self.client = client
-        self.lang = lang or "en-US"
-        self.voice = voice or "en-US-Wavenet-C"
+        self._client = client
+        self._lang = lang or "en-US"
+        self._voice = voice or "en-US-Wavenet-C"
 
     def synth_to_bytes(self, text: Any, format: FileFormat) -> bytes:
         if format not in self.supported_formats():
             raise UnsupportedFileFormat(format, self.__class__.__name__)
-        return self.client.synth(str(text), self.voice, self.lang, format)
+        return self._client.synth(str(text), self._voice, self._lang, format)
 
     @property
     def ssml(self) -> GoogleSSML:

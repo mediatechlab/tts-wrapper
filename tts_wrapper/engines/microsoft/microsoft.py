@@ -16,15 +16,15 @@ class MicrosoftTTS(AbstractTTS):
         lang: Optional[str] = None,
         voice: Optional[str] = None,
     ) -> None:
-        self.client = client
-        self.lang = lang or "en-US"
-        self.voice = voice or "en-US-JessaNeural"
+        self._client = client
+        self._lang = lang or "en-US"
+        self._voice = voice or "en-US-JessaNeural"
 
     def synth_to_bytes(self, text: Any, format: FileFormat) -> bytes:
         if format not in self.supported_formats():
             raise UnsupportedFileFormat(format, self.__class__.__name__)
-        return self.client.synth(str(text), format)
+        return self._client.synth(str(text), format)
 
     @property
     def ssml(self) -> MicrosoftSSML:
-        return MicrosoftSSML(self.lang, self.voice)
+        return MicrosoftSSML(self._lang, self._voice)

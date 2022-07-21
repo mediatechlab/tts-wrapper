@@ -80,3 +80,17 @@ jobs:
           poetry install
       - name: Test with pytest
         run: poetry run make tests
+
+  pip-install:
+    # This job makes sure that we can use pip to install the lib from PyPI.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Install the lib
+        run: |
+          pip install tts_wrapper[google,watson,microsoft,polly,sapi]
+      - name: Test the lib
+        run: python -c 'import tts_wrapper'

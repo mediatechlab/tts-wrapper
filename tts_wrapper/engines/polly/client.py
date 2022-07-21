@@ -25,11 +25,13 @@ class PollyClient:
         if boto3 is None:
             raise ModuleNotInstalled("boto3")
 
+        from boto3.session import Session
+
         if credentials is None:
-            boto_session = boto3.Session()
+            boto_session = Session()
         else:
             region, aws_key_id, aws_access_key = credentials
-            boto_session = boto3.Session(
+            boto_session = Session(
                 aws_access_key_id=aws_key_id,
                 aws_secret_access_key=aws_access_key,
                 region_name=region,

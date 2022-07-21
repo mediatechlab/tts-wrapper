@@ -26,7 +26,7 @@ requirements.dev.txt: pyproject.toml requirements.txt
 	poetry export --dev --without-hashes -f requirements.txt -o requirements.dev.txt
 
 cov.xml:
-	poetry run pytest --cov-report xml:cov.xml --cov=tts_wrapper -m "not slow"
+	pytest --cov-report xml:cov.xml --cov=tts_wrapper -m "not slow"
 
 mypy:
-	poetry run mypy $$(git ls-files '*.py')
+	mypy $$(git ls-files '*.py')

@@ -1,6 +1,6 @@
 name: build
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -40,7 +40,8 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y libttspico-utils
-      - name: Test with pytest
+      - name: Full test with pytest
+        if: github.event_name == 'push'
         env:
           POLLY_REGION: ${{ secrets.POLLY_REGION }}
           POLLY_AWS_ID: ${{ secrets.POLLY_AWS_ID }}
@@ -57,8 +58,11 @@ jobs:
           echo $GOOGLE_SA_FILE_B64 | base64 --decode > $GOOGLE_SA_PATH
           # run all tests with coverage
           pytest --cov=tts_wrapper
+      - name: Basic tests with pytest
+        if: github.event_name == 'pull_request'
+        run: make tests
       - name: Upload Coverage to Codecov
-        if: ${{ !env.ACT }}
+        if: ${{ !env.ACT }} && github.event_name == 'push'
         uses: codecov/codecov-action@v2
 
   poetry:

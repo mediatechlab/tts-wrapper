@@ -5,10 +5,8 @@ FileFormat = Union[Literal["wav"], Literal["mp3"]]
 
 
 class AbstractTTS(ABC):
-    """Abstract class (ABC) used by other text-to-speech classes,
-    it enforces some methods to be implemented
-    """
-    
+    """Abstract class (ABC) used by other text-to-speech classes."""
+
     @classmethod
     @abstractmethod
     def supported_formats(cls) -> List[FileFormat]:
@@ -19,11 +17,11 @@ class AbstractTTS(ABC):
     @abstractmethod
     def synth_to_bytes(self, text: Any, format: FileFormat) -> bytes:
         """Transforms written text to audio bytes on supported formats.
-        
-        Raises UnsupportedFileFormat if file format is not supported.
 
         @param text: Text to be transformed into audio bytes
         @param format: File format to be used when transforming to audio bytes, if supported
+        @returns: audio bytes created
+        @raises UnsupportedFileFormat: if file format is not supported
         """
 
         pass
@@ -31,7 +29,7 @@ class AbstractTTS(ABC):
     def synth_to_file(
         self, text: Any, filename: str, format: Optional[FileFormat] = None
     ) -> None:
-        """Transforms written text to an audio file and saves on disk
+        """Transforms written text to an audio file and saves on disk.
 
         @param text: Text to be transformed to audio file
         @param filename: Name of the file to be saved on disk

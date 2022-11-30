@@ -1,6 +1,7 @@
 version: 2
 updates:
-  - package-ecosystem: "poetry"
+  - package-ecosystem: "pip"
     directory: "/"
+    target-branch: develop
     schedule:
-      interval: "weekly"
+      interval: "monthly"

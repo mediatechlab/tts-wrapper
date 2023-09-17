@@ -36,6 +36,8 @@ pip install TTS-Wrapper[google, watson]
 
 For PicoTTS you need to install the package on your machine. For Debian (Ubuntu and others) install the package `libttspico-utils` and for Arch (Manjaro and others) there is a package called `aur/pico-tts`.
 
+**Note: If you get an error installing this like "bad pattern: TTS-Wrapper[..." then try using quotes e.g. `pip install "TTS-Wrapper[google, watson]"`**
+
 ## Usage
 
 Simply instantiate an object from the desired service and call `synth()`.
